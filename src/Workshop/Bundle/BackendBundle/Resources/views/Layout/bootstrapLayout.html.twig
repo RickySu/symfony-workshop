@@ -1,0 +1,20 @@
+{%extends "::base.html.twig"%}
+
+{%block javascripts%}
+{{parent()}}
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+{%endblock%}
+
+{%block stylesheets%}
+{{parent()}}
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{{asset('bundles/workshopbackend/css/main.css')}}">
+{%endblock%}
+
+{%block body%}
+    {%block header%}{%include "WorkshopBackendBundle:Common:_header.html.twig"%}{%endblock%}
+    <div class="container main-content">{%block main%}{%endblock%}</div>
+    {%block footer%}{%include "WorkshopBackendBundle:Common:_footer.html.twig"%}{%endblock%}
+{%endblock%}

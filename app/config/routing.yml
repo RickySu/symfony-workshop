@@ -1,0 +1,10 @@
+workshop_backend:
+    resource: "@WorkshopBackendBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
+workshop_frontend:
+    resource: "@WorkshopFrontendBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
