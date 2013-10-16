@@ -59,8 +59,10 @@ class DefaultController extends Controller
      */
     public function index4POSTAction()
     {   
-        $name = $this->getRequest()->request->get('name');
-        $hello = $this->getRequest()->request->get('hello');
+        if($this->getRequest()->isMethod('post')){
+            $name = $this->getRequest()->request->get('name');
+            $hello = $this->getRequest()->request->get('hello');
+        }
         return array('name' => $name, 'hello' => $hello);
     }        
     
