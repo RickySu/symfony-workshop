@@ -105,5 +105,42 @@ workshop_frontend:
 
 把後台的網址設為 /admin/xxxx
 
+連上這個網址就可以看到後台預設的頁面
+
+    http://localhost:8000/admin/hello/ricky
+
+後台的 Controller 為 
+
+src/Workshop/Bundle/BackendBundle/Controller/DefaultController.php
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+class DefaultController extends Controller
+{
+    /**
+     * @Route("/hello/{name}")
+     * @Template()
+     */
+    public function indexAction($name)
+    {
+        return array('name' => $name);
+    }
+}
+```
+
+預設的 View
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Default/index.html.twig
+
+```twig
+Hello {{ name }}!
+```
+
 [0]:    https://getcomposer.org/
 [1]:    http://symfony.com/download
