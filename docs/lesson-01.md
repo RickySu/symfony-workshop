@@ -28,6 +28,67 @@ path/to/install 就是你的專案擺放目錄。例如  ~/php/symfony-workshop
 
     tar zxvf Symfony_Standard_Vendors_2.3.6.tgz
 
+2) 建立前後台 Bundle
+------------------
+
+接下來我們要開啟 terminal，並切換到專案根目錄
+
+    cd ~/php/symfony-workshop
+
+接著開啟 Symfony 的 console 工具
+
+    app/console -s
+
+這時候 Symfony 的 console 工具會進入互動模式，要離開互動模式只要按下 Ctrl+D 就會離開。
+
+首先建立前台 Bundle
+
+    app/console generate:bundle
+
+接著 Symfony 會開始詢問一連串的問題
+
+```
+Bundle namespace: Workshop/Bundle/FrontendBundle
+Bundle name [WorkshopFrontendBundle]: (使用默認值)
+Target directory [/home/symfony/php/symfony/src]: (使用默認值)
+Configuration format (yml, xml, php, or annotation): annotation
+Do you want to generate the whole directory structure [no]? yes
+Do you confirm generation [yes]? (使用默認值)
+Confirm automatic update of your Kernel [yes]? (使用默認值)
+Confirm automatic update of the Routing [yes]? (使用默認值)
+```
+
+這時候就建立好前台 Bundle
+
+接著再來建立後台 Bundle
+
+    app/console generate:bundle
+
+接著 Symfony 會開始詢問一連串的問題
+
+```
+Bundle namespace: Workshop/Bundle/BackendBundle
+Bundle name [WorkshopFrontendBundle]: (使用默認值)
+Target directory [/home/symfony/php/symfony/src]: (使用默認值)
+Configuration format (yml, xml, php, or annotation): annotation
+Do you want to generate the whole directory structure [no]? yes
+Do you confirm generation [yes]? (使用默認值)
+Confirm automatic update of your Kernel [yes]? (使用默認值)
+Confirm automatic update of the Routing [yes]? (使用默認值)
+```
+
+接下來我們得進行一個 assets:install 的動作
+
+    app/console assets:install web --symlink --relative
+
+接著就可以開啟內建的 web server 觀看歡迎畫面了
+
+    app/console server:run
+
+預設的首頁網址就在
+
+    http://localhost:8000/
+
 
 
 [0]:    https://getcomposer.org/
