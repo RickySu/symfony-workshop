@@ -89,7 +89,21 @@ Confirm automatic update of the Routing [yes]? (使用默認值)
 
     http://localhost:8000/
 
+再來要編輯 app/config/routing.yml
 
+```yml
+workshop_backend:
+    resource: "@WorkshopBackendBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
+workshop_frontend:
+    resource: "@WorkshopFrontendBundle/Controller/"
+    type:     annotation
+    prefix:   
+```
+
+把後台的網址設為 /admin/xxxx
 
 [0]:    https://getcomposer.org/
 [1]:    http://symfony.com/download
