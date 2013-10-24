@@ -1,0 +1,51 @@
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main -%}
+<h1>Post list</h1>
+
+<table class="records_list table table-striped">
+    <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Id', 'p.id') }}</th>
+            <th>Category</th>
+            <th>Subject</th>
+            <th>Content</th>
+            <th>Createdat</th>
+            <th>Updatedat</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entity in pagination %}
+        <tr>
+            <td><a href="{{ path('post_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{%if entity.category%}{{ entity.category.name }}{%endif%}</td>
+            <td>{{ entity.subject }}</td>
+            <td>{{ entity.content }}</td>
+            <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{% if entity.updatedAt %}{{ entity.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>
+                <ul class="inline">
+                    <li>
+                        <a href="{{ path('post_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('post_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(pagination, "KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig") }}
+
+<ul>
+    <li>
+        <a href="{{ path('post_new') }}">
+            Create a new entry
+        </a>
+    </li>
+</ul>
+    {% endblock %}

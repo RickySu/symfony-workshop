@@ -1,0 +1,15 @@
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main -%}
+<h1>Post creation</h1>
+
+{{ form(form) }}
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('post') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

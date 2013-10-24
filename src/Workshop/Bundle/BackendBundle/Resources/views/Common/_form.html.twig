@@ -1,0 +1,8 @@
+{{ form_start(form, {attr: {role: 'form'}}) }}
+    {{ form_errors(form) }}
+    {%for formRow in form%}
+<div class="form-group">
+        {{ form_row(formRow) }}
+</div>
+    {%endfor%}
+{{ form_end(form) }}
