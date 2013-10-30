@@ -214,3 +214,46 @@ class Post
 
 注意 ManyToOne 關聯欄位設定名稱是 *inversedBy*。
 
+5) 建立 Database Schema
+----------------------
+
+在實際寫入資料庫前，先驗證一下 Entity 的設定是否正確。
+
+```
+app/console doctrine:schema:validate
+
+[Mapping]  OK - The mapping files are correct.
+[Database] FAIL - The database schema is not in sync with the current mapping file.
+The command terminated with an error status (2)
+```
+
+這時候 Symfony 回報，mapping 正確，可是資料庫還沒有同步。
+
+就可以開始寫入資料庫了。
+
+    app/console doctrine:schema:update --force
+
+6) 建立 Entity 關聯存取 methods
+------------------------------
+
+建立完關聯後，我們還是缺乏存取的方式。
+我們還得進行最後一個步驟，讓 Symfony 自動產生這些存取的 method。
+
+```
+app/console doctrine:generate:entities WorkshopBackendBundle:Category
+
+Generating entity "Workshop\Bundle\BackendBundle\Entity\Category"
+  > backing up Category.php to Category.php~
+  > generating Workshop\Bundle\BackendBundle\Entity\Category
+```
+
+```
+app/console doctrine:generate:entities WorkshopBackendBundle:Post
+
+Generating entity "Workshop\Bundle\BackendBundle\Entity\Post"
+  > backing up Post.php to Post.php~
+  > generating Workshop\Bundle\BackendBundle\Entity\Post
+```
+
+ 這時 Symfony 會重寫 Category.php 跟 Post.php，並且將原始檔案備份。
+
