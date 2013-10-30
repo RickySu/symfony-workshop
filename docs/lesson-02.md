@@ -51,4 +51,48 @@ The Entity shortcut name 就填入 *WorkshopBackendBundle:Category*
 
 註解方式就採用預設的 annotation
 
+接著 Symfony 會開始詢問資料表的欄位
+
+```
+Available types: array, simple_array, json_array, object,
+boolean, integer, smallint, bigint, string, text, datetime, datetimetz,
+date, time, decimal, float, blob, guid.
+
+New field name (press <return> to stop adding fields):
+```
+
+依序填入名稱以及欄位的資料類型，填完後直接按下 <return> (enter) 按鍵，結束對話。
+
+這裡我們就只建立一個欄位 name 類型是 string 長度 255。
+
+```
+New field name (press <return> to stop adding fields): name
+Field type [string]:
+Field length [255]:
+```
+
+接著 Symfony 會詢問是否要建立一個空的 repository class。這裡選擇 yes。
+完成 Category Entity 的建立。
+
+```
+Do you want to generate an empty repository class [no]? yes
+
+
+  Summary before generation
+
+
+You are going to generate a "WorkshopBackendBundle:Category" Doctrine2 entity
+using the "annotation" format.
+
+Do you confirm generation [yes]?
+
+
+  Entity generation
+
+
+Generating the entity code: OK
+
+
+  You can now start using the generated code!
+```
 
