@@ -19,10 +19,10 @@
             <td>
                 <ul class="list list-inline">
                     <li>
-                        <a href="{{ path('category_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('category_show', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-eye-open"></i> Show</a>
                     </li>
                     <li>
-                        <a href="{{ path('category_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('category_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a>
                     </li>
                 </ul>
             </td>
@@ -35,8 +35,8 @@
 
 <ul class="list list-inline">
     <li>
-        <a href="{{ path('category_new') }}">
-            Create a new entry
+        <a href="{{ path('category_new') }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-plus-sign"></i> Create a new entry
         </a>
     </li>
 </ul>

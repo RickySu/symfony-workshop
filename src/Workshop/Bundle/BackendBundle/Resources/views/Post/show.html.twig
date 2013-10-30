@@ -34,15 +34,15 @@
 
 <ul class="record_actions list list-inline">
     <li>
-        <a href="{{ path('post') }}">
+        <a href="{{ path('post') }}" class="btn btn-link">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('post_edit', { 'id': entity.id }) }}">
-            Edit
+        <a href="{{ path('post_edit', { 'id': entity.id }) }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-edit"></i> Edit
         </a>
     </li>
-    <li>{%include 'WorkshopBackendBundle:Common:_form.html.twig' with {form: delete_form}%}</li>
+    <li>{{ form(delete_form) }}</li>
 </ul>
 {% endblock %}
