@@ -743,7 +743,7 @@ class CategoryController extends Controller
 
 src/Workshop/Bundle/BackendBundle/Resources/views/Category/index.html.twig
 
-```
+```jinja
 {%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
 
 {% block main %}
