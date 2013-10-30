@@ -407,7 +407,7 @@ class DefaultController extends Controller
 
 src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
 
-```twig
+```jinja
 <header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
     <div class="container col-md-10">
         <div class="navbar-header">
@@ -544,5 +544,122 @@ class Post
 }
 ```
 
+9) 客製化樣板
+------------
+
+### Header Menu
+src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
+
+```jinja
+<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+    <div class="container col-md-10">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="http://symfony.com/"><img style="height:18px;" src="{{asset('apple-touch-icon.png')}}" /></a>
+        </div>
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{path('@BackendHome')}}">Home</a>
+        </div>
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{path('category')}}">Category</a></li>
+                <li><a href="{{path('post')}}">Post</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container col-md-2">
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <a href="#">Logout xxx</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+### 套用 Layout
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Category/*.html.twig
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Post/*.html.twig
+
+```jinja
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{%block main%}
+   {#...#}
+{%endblock%}
+```
+
+### 表單元件
+
+預設的表單元件樣板可能並不符合我們的需求，官方提供了簡單的方法讓我們可以自訂元件樣式。
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Layout/bootstrapLayout.html.twig
+
+```jinja
+{%extends "::base.html.twig"%}
+
+{%if edit_form is defined%}
+    {% form_theme edit_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if delete_form is defined%}
+    {% form_theme delete_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if form is defined%}
+    {% form_theme form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+
+{%block javascripts%}
+{{parent()}}
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+{%endblock%}
+
+{%block stylesheets%}
+{{parent()}}
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{{asset('bundles/workshopbackend/css/main.css')}}">
+{%endblock%}
+
+{%block body%}
+    {%block header%}{%include "WorkshopBackendBundle:Common:_header.html.twig"%}{%endblock%}
+    <div class="container main-content">{%block main%}{%endblock%}</div>
+    {%block footer%}{%include "WorkshopBackendBundle:Common:_footer.html.twig"%}{%endblock%}
+{%endblock%}
+```
+
+透過 form_theme 引入自訂的表單元件樣板。接著我們得自訂一些表單樣板。
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Common/_form.html.twig
+
+```jinja
+{%block form%}
+    {{ form_start(form, {attr: {role: 'form'}}) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+{%endblock form%}
+
+{%block form_row%}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form, {attr: {class: 'form-control'}}) }}
+    </div>
+{%endblock form_row%}
+
+{%block button_row%}
+    <div class="form-group">
+        {{ form_widget(form, {attr: {class: 'btn btn-default'}}) }}
+    </div>
+{%endblock%}
+```
+
+更多可用的表單樣板可以參考[這個檔案][1]
+
+
 
 [0]:    http://symfony.com/doc/current/book/doctrine.html#lifecycle-callbacks
+[1]:    https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
