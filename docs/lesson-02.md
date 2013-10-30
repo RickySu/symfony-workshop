@@ -659,7 +659,136 @@ src/Workshop/Bundle/BackendBundle/Resources/views/Common/_form.html.twig
 
 更多可用的表單樣板可以參考[這個檔案][1]
 
+10) 分頁
+--------
 
+Doctrine 並沒有提供分頁器的功能，因此得透過第三方的 Bundle 來實現。
+
+這邊我們選用了 [knplabs/knp-paginator-bundle][2] 這個 Bundle 來協助我們實現分頁功能。
+
+```
+composer.phar require knplabs/knp-paginator-bundle
+
+Please provide a version constraint for the knplabs/knp-paginator-bundle requirement: 2.3.*
+```
+
+版本就使用 2.3.*
+
+接著要啟用這個 Bundle
+
+app/AppKernel.php
+
+```php
+<?php
+
+use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
+
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            //...
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+        );
+
+```
+
+接著修改查詢
+
+src/Workshop/Bundle/BackendBundle/Controller/CategoryController.php
+
+```php
+<?php
+
+/**
+ * Category controller.
+ *
+ * @Route("/category")
+ */
+class CategoryController extends Controller
+{
+
+    /**
+     * Lists all Category entities.
+     *
+     * @Route("/", name="category")
+     * @Method("GET")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        try {
+            $query = $em->getRepository('WorkshopBackendBundle:Category')
+                    ->createQueryBuilder('c')
+                    ->getQuery();
+
+            $paginator = $this->get('knp_paginator');
+            $pagination = $paginator->paginate(
+                    $query, $this->getRequest()->get('page', 1), 10 //10 -> 每頁幾筆
+            );
+        } catch (QueryException $e) {
+            throw $this->createNotFoundException();
+        }
+        return array(
+            'pagination' => $pagination,
+        );
+    }
+
+```
+
+修改樣板加入 pagination
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Category/index.html.twig
+
+```
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main %}
+<h1>Category list</h1>
+
+<table class="records_list table table-striped">
+    <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(pagination, 'Id', 'c.id') }}</th>
+            <th>{{ knp_pagination_sortable(pagination, 'Name', 'c.name') }}</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entity in pagination %}
+        <tr>
+            <td><a href="{{ path('category_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.name }}</td>
+            <td>
+                <ul class="list list-inline">
+                    <li>
+                        <a href="{{ path('category_show', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-eye-open"></i> Show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('category_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(pagination, "KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig") }}
+
+<ul class="list list-inline">
+    <li>
+        <a href="{{ path('category_new') }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-plus-sign"></i> Create a new entry
+        </a>
+    </li>
+</ul>
+{% endblock %}
+```
 
 [0]:    http://symfony.com/doc/current/book/doctrine.html#lifecycle-callbacks
 [1]:    https://github.com/symfony/symfony/blob/master/src/Symfony/Bridge/Twig/Resources/views/Form/form_div_layout.html.twig
+[2]:    https://github.com/KnpLabs/KnpPaginatorBundle
