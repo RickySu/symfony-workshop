@@ -433,3 +433,116 @@ src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
     </div>
 </header>
 ```
+
+8) 客製化表單
+------------
+
+建立好的 CRUD 會位於 /admin/category, /admin/post。
+
+可是選擇 /admin/post 的 *Create a new entry* 會發現當場噴出一堆 error。
+
+這是因為 post 的欄位中有對應一個 Category Entity，然而 Category Entity 是一個物件，無法直接顯示*內容*。
+
+解決方法就是幫 Category Entity 補上一個 __toString。
+
+src/Workshop/Bundle/BackendBundle/Entity/Category.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Category
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ */
+class Category
+{
+    public function __toString()
+    {
+        return $this->getName();
+    }
+}
+```
+
+接著我們要拿掉 Post 中 Created At 以及 Updated At 的欄位。
+
+因為建立時間，跟更新時間是不能讓 User 自己修改才對。
+
+src/Workshop/Bundle/BackendBundle/Form/PostType.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class PostType extends AbstractType
+{
+        /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('subject')
+            ->add('content')
+//            ->add('createdAt')
+//            ->add('updatedAt')
+            ->add('category')
+        ;
+    }
+}
+```
+
+將建立以及更新時間拔除。
+
+但是建立以及更新時間並不會自動維護，因此得動用 LifecycleCallbacks 功能。 詳細用法可以[參考官方說明][0]。
+
+src/Workshop/Bundle/BackendBundle/Entity/Category.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Post
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks()
+ */
+class Post
+{
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->setCreatedAt(new \Datetime());
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->setUpdatedAt(new \Datetime());
+    }
+}
+```
+
+
+[0]:    http://symfony.com/doc/current/book/doctrine.html#lifecycle-callbacks
