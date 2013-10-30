@@ -257,3 +257,179 @@ Generating entity "Workshop\Bundle\BackendBundle\Entity\Post"
 
  這時 Symfony 會重寫 Category.php 跟 Post.php，並且將原始檔案備份。
 
+7) 建立 CRUD
+------------------------------
+
+接著要來建立 CRUD 嘍。
+首先建立 Category CRUD。
+
+    app/console doctrine:generate:crud
+
+進入對話模式，照著填寫就對了。
+
+```
+
+  Welcome to the Doctrine2 CRUD generator
+
+
+
+This command helps you generate CRUD controllers and templates.
+
+First, you need to give the entity for which you want to generate a CRUD.
+You can give an entity that does not exist yet and the wizard will help
+you defining it.
+
+You must use the shortcut notation like AcmeBlogBundle:Post.
+
+The Entity shortcut name: WorkshopBackendBundle:Category
+
+By default, the generator creates two actions: list and show.
+You can also ask it to generate "write" actions: new, update, and delete.
+
+Do you want to generate the "write" actions [no]? yes
+
+Determine the format to use for the generated CRUD.
+
+Configuration format (yml, xml, php, or annotation) [annotation]:
+
+Determine the routes prefix (all the routes will be "mounted" under this
+prefix: /prefix/, /prefix/new, ...).
+
+Routes prefix [/category]:
+
+
+  Summary before generation
+
+
+You are going to generate a CRUD controller for "WorkshopBackendBundle:Category"
+using the "annotation" format.
+
+Do you confirm generation [yes]?
+
+
+  CRUD generation
+
+
+Generating the CRUD code: OK
+Generating the Form code: OK
+
+
+  You can now start using the generated code!
+
+
+```
+
+
+接著同樣的方式建立 Post CRUD。
+
+```
+
+  Welcome to the Doctrine2 CRUD generator
+
+
+
+This command helps you generate CRUD controllers and templates.
+
+First, you need to give the entity for which you want to generate a CRUD.
+You can give an entity that does not exist yet and the wizard will help
+you defining it.
+
+You must use the shortcut notation like AcmeBlogBundle:Post.
+
+The Entity shortcut name: WorkshopBackendBundle:Post
+
+By default, the generator creates two actions: list and show.
+You can also ask it to generate "write" actions: new, update, and delete.
+
+Do you want to generate the "write" actions [no]? yes
+
+Determine the format to use for the generated CRUD.
+
+Configuration format (yml, xml, php, or annotation) [annotation]:
+
+Determine the routes prefix (all the routes will be "mounted" under this
+prefix: /prefix/, /prefix/new, ...).
+
+Routes prefix [/post]:
+
+
+  Summary before generation
+
+
+You are going to generate a CRUD controller for "WorkshopBackendBundle:Post"
+using the "annotation" format.
+
+Do you confirm generation [yes]?
+
+
+  CRUD generation
+
+
+Generating the CRUD code: OK
+Generating the Form code: OK
+
+
+  You can now start using the generated code!
+
+
+```
+
+```
+請注意，由於之前的 Default Controller 路徑會打架，記得修改一下。
+只保留 indexAction，其餘的請拿掉。
+```
+
+src/Workshop/Bundle/BackendBundle/Controller/DefaultController.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
+class DefaultController extends Controller
+{
+    /**
+     * @Route("/", name="@BackendHome")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        return array();
+    }
+
+}
+```
+
+src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
+
+```twig
+<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+    <div class="container col-md-10">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="http://symfony.com/"><img style="height:18px;" src="{{asset('apple-touch-icon.png')}}" /></a>
+        </div>
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{path('@BackendHome')}}">Home</a>
+        </div>
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav">
+            </ul>
+        </nav>
+    </div>
+    <div class="container col-md-2">
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <a href="#">Logout xxx</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+```
