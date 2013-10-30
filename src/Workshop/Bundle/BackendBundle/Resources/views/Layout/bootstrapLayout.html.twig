@@ -1,5 +1,15 @@
 {%extends "::base.html.twig"%}
 
+{%if edit_form is defined%}
+    {% form_theme edit_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if delete_form is defined%}
+    {% form_theme delete_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if form is defined%}
+    {% form_theme form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+
 {%block javascripts%}
 {{parent()}}
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>

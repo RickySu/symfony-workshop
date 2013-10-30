@@ -1,8 +1,20 @@
-{{ form_start(form, {attr: {role: 'form'}}) }}
-    {{ form_errors(form) }}
-    {%for formRow in form%}
-<div class="form-group">
-        {{ form_row(formRow) }}
-</div>
-    {%endfor%}
-{{ form_end(form) }}
+{%block form%}
+    {{ form_start(form, {attr: {role: 'form'}}) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+{%endblock form%}
+
+
+{%block form_row%}
+    <div class="form-group">
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form, {attr: {class: 'form-control'}}) }}
+    </div>
+{%endblock form_row%}
+    
+{%block button_row%}
+    <div class="form-group">
+        {{ form_widget(form, {attr: {class: 'btn btn-default'}}) }}
+    </div>
+{%endblock%}
