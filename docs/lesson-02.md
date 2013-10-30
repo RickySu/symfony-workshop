@@ -94,5 +94,63 @@ Generating the entity code: OK
 
 
   You can now start using the generated code!
+
+```
+
+再來同樣的方式建立 Post Entity
+
+```
+First, you need to give the entity name you want to generate.
+You must use the shortcut notation like AcmeBlogBundle:Post.
+
+The Entity shortcut name: WorkshopBackendBundle:Post
+
+Determine the format to use for the mapping information.
+
+Configuration format (yml, xml, php, or annotation) [annotation]:
+```
+
+接著我們要建立幾個欄位 subject, content, created_at, updated_at。
+分別是文章的標題，內容，建立時間以及更新時間。
+
+```
+New field name (press <return> to stop adding fields): subject
+Field type [string]:
+Field length [255]:
+
+New field name (press <return> to stop adding fields): content
+Field type [string]: text
+
+New field name (press <return> to stop adding fields): created_at
+Field type [datetime]:
+
+New field name (press <return> to stop adding fields): updated_at
+Field type [datetime]:
+```
+
+同樣的完成最後建立步驟
+
+```
+Do you want to generate an empty repository class [no]? yes
+
+
+  Summary before generation
+
+
+You are going to generate a "WorkshopBackendBundle:Post" Doctrine2 entity
+using the "annotation" format.
+
+Do you confirm generation [yes]?
+
+
+  Entity generation
+
+
+Generating the entity code: OK
+
+
+  You can now start using the generated code!
+
+
 ```
 
