@@ -71,11 +71,11 @@ Field type [string]:
 Field length [255]:
 ```
 
-接著 Symfony 會詢問是否要建立一個空的 repository class。這裡選擇 yes。
+接著 Symfony 會確認一些設定，都採用預設值即可。
 完成 Category Entity 的建立。
 
 ```
-Do you want to generate an empty repository class [no]? yes
+Do you want to generate an empty repository class [no]?
 
 
   Summary before generation
@@ -131,7 +131,7 @@ Field type [datetime]:
 同樣的完成最後建立步驟
 
 ```
-Do you want to generate an empty repository class [no]? yes
+Do you want to generate an empty repository class [no]?
 
 
   Summary before generation
@@ -153,4 +153,64 @@ Generating the entity code: OK
 
 
 ```
+
+4) 建立資料表關聯
+---------------
+
+首先確立 Catgory 跟 Post 之間是一個一對多的關聯。也就是一個目錄底下會有很多篇的文章。
+
+編輯 src/Workshop/Bundle/BackendBundle/Entity/Category.php
+
+```php
+<?php
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Category
+ *
+ * @ORM\Table()
+ */
+class Category
+{
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="category")
+     * @var Post[]
+     */
+    protected $posts;
+}
+```
+
+加入 Category 對 Post 的關聯 *OneToMany*
+
+接著編輯 src/Workshop/Bundle/BackendBundle/Entity/Post.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Post
+ *
+ * @ORM\Table()
+ * @ORM\Entity
+ */
+class Post
+{
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
+     * @var Category
+     */
+    protected $category;
+}
+```
+
+加入 Post 對 Category 的關聯 *ManyToOne*
+
+注意 ManyToOne 關聯欄位設定名稱是 *inversedBy*。
 
