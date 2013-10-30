@@ -1,6 +1,6 @@
 {%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
 
-{% block main -%}
+{% block main %}
 <h1>Post list</h1>
 
 <table class="records_list table table-striped">
@@ -25,7 +25,7 @@
             <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
             <td>{% if entity.updatedAt %}{{ entity.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
             <td>
-                <ul class="inline">
+                <ul class="list list-inline">
                     <li>
                         <a href="{{ path('post_show', { 'id': entity.id }) }}">show</a>
                     </li>
@@ -41,7 +41,7 @@
 
 {{ knp_pagination_render(pagination, "KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig") }}
 
-<ul>
+<ul class="list list-inline">
     <li>
         <a href="{{ path('post_new') }}">
             Create a new entry

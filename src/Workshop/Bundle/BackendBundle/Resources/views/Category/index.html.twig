@@ -1,6 +1,6 @@
 {%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
 
-{% block main -%}
+{% block main %}
 <h1>Category list</h1>
 
 <table class="records_list table table-striped">
@@ -17,7 +17,7 @@
             <td><a href="{{ path('category_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
             <td>{{ entity.name }}</td>
             <td>
-                <ul>
+                <ul class="list list-inline">
                     <li>
                         <a href="{{ path('category_show', { 'id': entity.id }) }}">show</a>
                     </li>
@@ -33,7 +33,7 @@
 
 {{ knp_pagination_render(pagination, "KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig") }}
 
-<ul>
+<ul class="list list-inline">
     <li>
         <a href="{{ path('category_new') }}">
             Create a new entry
