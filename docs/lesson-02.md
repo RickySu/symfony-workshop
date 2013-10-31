@@ -507,7 +507,7 @@ class PostType extends AbstractType
 
 但是建立以及更新時間並不會自動維護，因此得動用 LifecycleCallbacks 功能。 詳細用法可以[參考官方說明][0]。
 
-src/Workshop/Bundle/BackendBundle/Entity/Category.php
+src/Workshop/Bundle/BackendBundle/Entity/Post.php
 
 ```php
 <?php
