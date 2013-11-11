@@ -64,3 +64,8 @@ swiftmailer:
     username:  %mailer_user%
     password:  %mailer_password%
     spool:     { type: memory }
+
+fos_user:
+    db_driver:    orm
+    user_class:   Workshop\Bundle\BackendBundle\Entity\User
+    firewall_name:     secured_area

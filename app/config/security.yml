@@ -1,39 +1,27 @@
 security:
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+        FOS\UserBundle\Model\UserInterface:              sha1
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        in_memory:
-            memory:
-                users:
-                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
-
+        admin:
+            id:            fos_user.user_provider.username
     firewalls:
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-        login:
-            pattern:  ^/demo/secured/login$
-            security: false
-
-        secured_area:
-            pattern:    ^/demo/secured/
+            pattern:       ^/(_(profiler|wdt)|css|images|js)/
+            security:      false
+        admin:
             form_login:
-                check_path: _security_check
-                login_path: _demo_login
+                provider:        admin
+                csrf_provider:  form.csrf_provider
+                login_path:     fos_user_security_login
+                check_path:     fos_user_security_check
             logout:
-                path:   _demo_logout
-                target: _demo
-            #anonymous: ~
-            #http_basic:
-            #    realm: "Secured Demo Area"
-
+                path:            fos_user_security_logout
+                target:          @BackendHome
+            anonymous:           true
     access_control:
-        - { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/admin/login,  roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/,       roles: ROLE_ADMIN }
