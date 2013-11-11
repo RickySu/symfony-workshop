@@ -9,15 +9,21 @@
         </div>
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
             <ul class="nav navbar-nav">
+                {%if is_granted('ROLE_CATEGORY')%}
                 <li>
                     <a href="{{path('category')}}">Category</a>
                 </li>
+                {%endif%}
+                {%if is_granted('ROLE_POST')%}
                 <li>
                     <a href="{{path('post')}}">Post</a>
                 </li>
+                {%endif%}
+                {%if is_granted('ROLE_SUPER_ADMIN')%}
                 <li>
                     <a href="{{path('user')}}">User</a>
                 </li>
+                {%endif%}
             </ul>
         </nav>
     </div>
@@ -25,7 +31,7 @@
         <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
             <ul class="nav navbar-nav pull-right">
                 <li>
-                    <a href="#">Logout xxx</a>
+                    <a href="{{path('fos_user_security_logout')}}">Logout {{app.user.username}}</a>
                 </li>
             </ul>
         </nav>

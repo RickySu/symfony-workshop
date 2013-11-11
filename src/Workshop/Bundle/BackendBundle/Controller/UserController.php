@@ -191,6 +191,8 @@ class UserController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $userManager = $this->get('fos_user.user_manager');
+            $userManager->updateUser($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));

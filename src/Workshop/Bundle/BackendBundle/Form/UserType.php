@@ -18,10 +18,38 @@ class UserType extends AbstractType
             ->add('username')
             ->add('email')
             ->add('enabled')
-            ->add('password')
-            ->add('locked')
-            ->add('expired')
-            ->add('roles')
+            ->add('plain_password', 'password', array(
+                'required' => false,
+            ))
+            ->add('plain_password', 'repeated', array(
+                'required' => false,
+                'type' => 'password',
+                'first_options' => array(
+                    'label' => 'Password'
+                ),
+                'second_options' => array(
+                    'label' => 'Password Again'
+                ),
+                'invalid_message' => 'The password fields must match.',
+            ))
+            ->add('locked', 'checkbox', array(
+                'required' => false,
+                'value' => true,
+            ))
+            ->add('expired', 'checkbox', array(
+                'required' => false,
+                'value' => true,
+            ))
+            ->add('roles','choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Normal User',
+                    'ROLE_ADMIN' => 'Backend User',
+                    'ROLE_CATEGORY' => 'Backend Category Admin User',
+                    'ROLE_POST' => 'Backend Post Admin User',
+                    'ROLE_SUPER_ADMIN' => 'Backend Super Admin',
+                ),
+                'multiple' => true,
+            ))
         ;
     }
 
