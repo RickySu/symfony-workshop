@@ -1,0 +1,43 @@
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main %}
+<h1>Group list</h1>
+
+<table class="records_list table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Roles</th>
+            <th>Id</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entity in entities %}
+        <tr>
+            <td>{{ entity.id }}</td>
+            <td><a href="{{ path('group_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+            <td><ul class="list">{%for role in entity.roles %}<li>{{role}}</li>{%endfor%}</ul></td>
+            <td>
+                <ul class="list list-inline">
+                    <li>
+                        <a href="{{ path('group_show', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-eye-open"></i> Show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('group_edit', { 'id': entity.id }) }}" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<ul class="list list-inline">
+    <li>
+        <a href="{{ path('group_new') }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-plus-sign"></i> Create a new entry
+        </a>
+    </li>
+</ul>
+{% endblock %}

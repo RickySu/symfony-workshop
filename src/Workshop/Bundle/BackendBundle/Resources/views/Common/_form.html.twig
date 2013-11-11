@@ -6,19 +6,33 @@
 
 
 {%block form_row%}
-    <div class="form-group">
-        {{ form_label(form, null, {label_attr: {class: 'col-sm-2 control-label'}}) }}        
-         <div class="col-sm-10">
+<div class="form-group">
+        {{ form_label(form, null, {label_attr: {class: 'col-sm-2 control-label'}}) }}
+    <div class="col-sm-10">
         {{ form_widget(form, {attr: {class: 'form-control'}}) }}
-         </div>
+    </div>
         {{ form_errors(form) }}
-    </div>
+</div>
 {%endblock form_row%}
-    
+
 {%block button_row%}
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
         {{ form_widget(form, {attr: {class: 'btn btn-default'}}) }}
-        </div>
     </div>
+</div>
 {%endblock%}
+
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+<div class="container">
+    {% for child in form %}
+        <label class="checkbox">
+        {{ form_widget(child) }}
+        {{ form_label(child) }}
+        </label>
+    {% endfor %}
+</div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}

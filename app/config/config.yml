@@ -69,3 +69,5 @@ fos_user:
     db_driver:    orm
     user_class:   Workshop\Bundle\BackendBundle\Entity\User
     firewall_name:     secured_area
+    group:
+        group_class:    Workshop\Bundle\BackendBundle\Entity\Group

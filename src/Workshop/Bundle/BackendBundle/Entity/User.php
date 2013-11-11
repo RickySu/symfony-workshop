@@ -8,7 +8,7 @@ use FOS\UserBundle\Entity\User as BaseUser;
 /**
  * User
  *
- * @ORM\Table()
+ * @ORM\Table(name="fos_user")
  * @ORM\Entity
  */
 class User extends BaseUser
@@ -22,6 +22,15 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Group")
+     * @ORM\JoinTable(name="fos_user_user_group",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     * @var Group
+     */
+    protected $groups;
 
     /**
      * Get id

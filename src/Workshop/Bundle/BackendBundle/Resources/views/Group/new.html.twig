@@ -1,0 +1,15 @@
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main %}
+<h1>Group creation</h1>
+
+    {{ form(form) }}
+
+<ul class="record_actions list list-inline">
+    <li>
+        <a href="{{ path('group') }}" class="btn btn-link">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

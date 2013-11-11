@@ -40,7 +40,7 @@ class UserType extends AbstractType
                 'required' => false,
                 'value' => true,
             ))
-            ->add('roles','choice', array(
+            ->add('roles', 'choice', array(
                 'choices' => array(
                     'ROLE_USER' => 'Normal User',
                     'ROLE_ADMIN' => 'Backend User',
@@ -49,6 +49,14 @@ class UserType extends AbstractType
                     'ROLE_SUPER_ADMIN' => 'Backend Super Admin',
                 ),
                 'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ))
+            ->add('groups', 'entity', array(
+                'class' => 'WorkshopBackendBundle:Group',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
             ))
         ;
     }

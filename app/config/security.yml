@@ -6,7 +6,7 @@ security:
         ROLE_ADMIN:        ROLE_USER
         ROLE_CATEGORY:     ROLE_ADMIN
         ROLE_POST:         ROLE_ADMIN
-        ROLE_SUPER_ADMIN:  [ROLE_CATEGORY, ROLE_SUPERA_DMIN]
+        ROLE_SUPER_ADMIN:  [ROLE_CATEGORY,ROLE_POST, ROLE_SUPERA_DMIN]
     providers:
         admin:
             id:            fos_user.user_provider.username

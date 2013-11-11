@@ -21,6 +21,11 @@
                 {%endif%}
                 {%if is_granted('ROLE_SUPER_ADMIN')%}
                 <li>
+                    <a href="{{path('group')}}">Group</a>
+                </li>
+                {%endif%}
+                {%if is_granted('ROLE_SUPER_ADMIN')%}
+                <li>
                     <a href="{{path('user')}}">User</a>
                 </li>
                 {%endif%}
