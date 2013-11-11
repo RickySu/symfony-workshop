@@ -1,89 +1,67 @@
-{% extends '::base.html.twig' %}
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
 
-{% block body -%}
-    <h1>User</h1>
+{% block main %}
+<h1>User</h1>
 
-    <table class="record_properties">
-        <tbody>
-            <tr>
-                <th>Username</th>
-                <td>{{ entity.username }}</td>
-            </tr>
-            <tr>
-                <th>Usernamecanonical</th>
-                <td>{{ entity.usernameCanonical }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ entity.email }}</td>
-            </tr>
-            <tr>
-                <th>Emailcanonical</th>
-                <td>{{ entity.emailCanonical }}</td>
-            </tr>
-            <tr>
-                <th>Enabled</th>
-                <td>{{ entity.enabled }}</td>
-            </tr>
-            <tr>
-                <th>Salt</th>
-                <td>{{ entity.salt }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ entity.password }}</td>
-            </tr>
-            <tr>
-                <th>Lastlogin</th>
-                <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Locked</th>
-                <td>{{ entity.locked }}</td>
-            </tr>
-            <tr>
-                <th>Expired</th>
-                <td>{{ entity.expired }}</td>
-            </tr>
-            <tr>
-                <th>Expiresat</th>
-                <td>{{ entity.expiresAt|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Confirmationtoken</th>
-                <td>{{ entity.confirmationToken }}</td>
-            </tr>
-            <tr>
-                <th>Passwordrequestedat</th>
-                <td>{{ entity.passwordRequestedAt|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ entity.roles }}</td>
-            </tr>
-            <tr>
-                <th>Credentialsexpired</th>
-                <td>{{ entity.credentialsExpired }}</td>
-            </tr>
-            <tr>
-                <th>Credentialsexpireat</th>
-                <td>{{ entity.credentialsExpireAt|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
-            </tr>
-        </tbody>
-    </table>
+<table class="record_properties table table-striped">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Username</th>
+            <td>{{ entity.username }}</td>
+        </tr>
+        <tr>
+            <th>Usernamecanonical</th>
+            <td>{{ entity.usernameCanonical }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ entity.email }}</td>
+        </tr>
+        <tr>
+            <th>Emailcanonical</th>
+            <td>{{ entity.emailCanonical }}</td>
+        </tr>
+        <tr>
+            <th>Enabled</th>
+            <td>{{ entity.enabled }}</td>
+        </tr>
+        <tr>
+            <th>Lastlogin</th>
+            <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Locked</th>
+            <td>{{ entity.locked }}</td>
+        </tr>
+        <tr>
+            <th>Expired</th>
+            <td>{{ entity.expired }}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>
+                <ul class="list">
+                {%for role in entity.roles%}
+                    <li>{{role}}</li>
+                {%endfor%}
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
-        <ul class="record_actions">
+<ul class="record_actions list list-inline">
     <li>
-        <a href="{{ path('user') }}">
+        <a href="{{ path('user') }}" class="btn btn-link">
             Back to the list
         </a>
     </li>
     <li>
-        <a href="{{ path('user_edit', { 'id': entity.id }) }}">
+        <a href="{{ path('user_edit', { 'id': entity.id }) }}" class="btn btn-default">
             Edit
         </a>
     </li>

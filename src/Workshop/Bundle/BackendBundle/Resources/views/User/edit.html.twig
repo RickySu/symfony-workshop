@@ -1,13 +1,13 @@
-{% extends '::base.html.twig' %}
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
 
-{% block body -%}
-    <h1>User edit</h1>
+{% block main %}
+<h1>User edit</h1>
 
     {{ form(edit_form) }}
 
-        <ul class="record_actions">
+<ul class="record_actions list list-inline">
     <li>
-        <a href="{{ path('user') }}">
+        <a href="{{ path('user') }}" class="btn btn-link">
             Back to the list
         </a>
     </li>

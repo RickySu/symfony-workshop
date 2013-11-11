@@ -1,5 +1,5 @@
 {%block form%}
-    {{ form_start(form, {attr: {role: 'form'}}) }}
+    {{ form_start(form, {attr: {role: 'form', 'class': 'form-horizontal'}}) }}
         {{ form_widget(form) }}
     {{ form_end(form) }}
 {%endblock form%}
@@ -7,14 +7,18 @@
 
 {%block form_row%}
     <div class="form-group">
-        {{ form_label(form) }}
-        {{ form_errors(form) }}
+        {{ form_label(form, null, {label_attr: {class: 'col-sm-2 control-label'}}) }}        
+         <div class="col-sm-10">
         {{ form_widget(form, {attr: {class: 'form-control'}}) }}
+         </div>
+        {{ form_errors(form) }}
     </div>
 {%endblock form_row%}
     
 {%block button_row%}
     <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
         {{ form_widget(form, {attr: {class: 'btn btn-default'}}) }}
+        </div>
     </div>
 {%endblock%}

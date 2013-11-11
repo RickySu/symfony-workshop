@@ -16,24 +16,15 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('usernameCanonical')
             ->add('email')
-            ->add('emailCanonical')
             ->add('enabled')
-            ->add('salt')
             ->add('password')
-            ->add('lastLogin')
             ->add('locked')
             ->add('expired')
-            ->add('expiresAt')
-            ->add('confirmationToken')
-            ->add('passwordRequestedAt')
             ->add('roles')
-            ->add('credentialsExpired')
-            ->add('credentialsExpireAt')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
