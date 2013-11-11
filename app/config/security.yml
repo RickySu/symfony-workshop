@@ -18,7 +18,7 @@ security:
             form_login:
                 provider:        admin
                 csrf_provider:  form.csrf_provider
-                login_path:     fos_user_security_login
+                login_path:     @BackendLogin
                 check_path:     fos_user_security_check
             logout:
                 path:            fos_user_security_logout
