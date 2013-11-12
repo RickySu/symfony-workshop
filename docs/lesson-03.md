@@ -259,3 +259,99 @@ fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
     prefix: /admin
 ```
+
+9) 建立 User 管理 CRUD
+---------------------
+
+```
+app/console doctrine:generate:crud
+
+
+  Welcome to the Doctrine2 CRUD generator
+
+
+
+This command helps you generate CRUD controllers and templates.
+
+First, you need to give the entity for which you want to generate a CRUD.
+You can give an entity that does not exist yet and the wizard will help
+you defining it.
+
+You must use the shortcut notation like AcmeBlogBundle:Post.
+
+The Entity shortcut name: WorkshopBackendBundle:User
+
+By default, the generator creates two actions: list and show.
+You can also ask it to generate "write" actions: new, update, and delete.
+
+Do you want to generate the "write" actions [no]? yes
+
+Determine the format to use for the generated CRUD.
+
+Configuration format (yml, xml, php, or annotation) [annotation]:
+
+Determine the routes prefix (all the routes will be "mounted" under this
+prefix: /prefix/, /prefix/new, ...).
+
+Routes prefix [/user]:
+
+
+  Summary before generation
+
+
+You are going to generate a CRUD controller for "WorkshopBackendBundle:User"
+using the "annotation" format.
+
+Do you confirm generation [yes]?
+
+
+  CRUD generation
+
+
+Generating the CRUD code: OK
+Generating the Form code: OK
+
+
+  You can now start using the generated code!
+
+```
+
+將 User 管理的路徑加入選單中
+
+編輯 src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
+
+```jinja
+<header role="banner" class="navbar navbar-inverse navbar-fixed-top bs-docs-nav">
+    <div class="container col-md-10">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="http://symfony.com/"><img style="height:18px;" src="{{asset('apple-touch-icon.png')}}" /></a>
+        </div>
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{path('@BackendHome')}}">Home</a>
+        </div>
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="{{path('category')}}">Category</a>
+                </li>
+                <li>
+                    <a href="{{path('post')}}">Post</a>
+                </li>
+                <li>
+                    <a href="{{path('user')}}">User</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container col-md-2">
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav pull-right">
+                <li>
+                    <a href="{{path('fos_user_security_logout')}}">Logout {{app.user.username}}</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+```
