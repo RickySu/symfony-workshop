@@ -496,3 +496,126 @@ Generating the Form code: OK
 {% endblock %}
 ```
 
+更新 User Form
+
+編輯 src/Workshop/Bundle/BackendBundle/Form/UserType.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class UserType extends AbstractType
+{
+        /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('username')
+            ->add('email')
+            ->add('enabled', 'checkbox', array('required' => false))
+            ->add('plain_password')
+            ->add('plain_password', 'repeated', array(
+                'type' => 'password',
+                'first_options' => array(
+                    'label' => 'Password',
+                ),
+                'second_options' => array(
+                    'label' => 'Password Again',
+                ),
+            ))
+            ->add('locked', 'checkbox', array('required' => false))
+            ->add('expired', 'checkbox', array('required' => false))
+            ->add('roles', 'choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Normal User',
+                    'ROLE_ADMIN' => 'Backend User',
+                    'ROLE_POST' => 'Post Admin',
+                    'ROLE_CATEGORY' => 'Category Admin',
+                    'ROLE_SUPER_ADMIN' => 'Super Admin',
+                ),
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ))
+            ->add('credentialsExpired', 'checkbox', array('required' => false))
+        ;
+    }
+
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Workshop\Bundle\BackendBundle\Entity\User'
+        ));
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'workshop_bundle_backendbundle_user';
+    }
+}
+```
+
+更新 Controller, 改用 userManager 更新 user。
+
+編輯 src/Workshop/Bundle/BackendBundle/Controller/UserController.php
+
+```php
+/**
+ * User controller.
+ *
+ * @Route("/user")
+ */
+class UserController extends Controller
+{
+   /**
+     * Edits an existing User entity.
+     *
+     * @Route("/{id}", name="user_update")
+     * @Method("PUT")
+     * @Template("WorkshopBackendBundle:User:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('WorkshopBackendBundle:User')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $userManager = $this->get('fos_user.user_manager');
+            /* @var $userManager \FOS\UserBundle\Doctrine\UserManager */
+            $userManager->updateUser($entity);
+            //$em->flush();
+
+            return $this->redirect($this->generateUrl('user_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+}
+```
