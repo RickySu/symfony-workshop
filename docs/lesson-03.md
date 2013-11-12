@@ -204,3 +204,58 @@ Please choose a role:ROLE_ADMIN
 Role "ROLE_ADMIN" has been added to user "ricky"
 ```
 
+8) 設定防火牆規則
+----------------
+
+Symfony 的安全設定都集中在 app/config/security.yml
+
+```yml
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface:              sha1
+
+    role_hierarchy:
+        ROLE_ADMIN:        ROLE_USER
+
+    providers:
+        admin:
+            id:            fos_user.user_provider.username
+
+    firewalls:
+        dev:
+            pattern:       ^/(_(profiler|wdt)|css|images|js)/
+            security:      false
+
+        admin:
+            form_login:
+                login_path:     fos_user_security_login
+                check_path:     fos_user_security_check
+            logout:
+                path:            fos_user_security_logout
+                target:          @BackendHome
+            anonymous:           true
+
+    access_control:
+        - { path: ^/admin/login,  roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/,       roles: ROLE_ADMIN }
+```
+
+接著要把 FOSUserBundle security 相關的 Routing 加入
+
+編輯 app/config/routing.yml
+
+```yml
+workshop_backend:
+    resource: "@WorkshopBackendBundle/Controller/"
+    type:     annotation
+    prefix:   /admin
+
+workshop_frontend:
+    resource: "@WorkshopFrontendBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    prefix: /admin
+```
