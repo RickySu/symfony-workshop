@@ -355,3 +355,144 @@ Generating the Form code: OK
     </div>
 </header>
 ```
+
+因為 FOSUserBundle 提供了相當多的欄位，但是有些欄位是 private 因此必須隱藏掉，不要在列表中顯示出來。
+
+編輯 src/Workshop/Bundle/BackendBundle/Resources/views/User/index.html.twig
+
+```jinja
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main %}
+<h1>User list</h1>
+
+<table class="records_list table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Enabled</th>
+            <th>Lastlogin</th>
+            <th>Locked</th>
+            <th>Expired</th>
+            <th>Roles</th>
+            <th>Credentialsexpired</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entity in entities %}
+        <tr>
+            <td>{{ entity.id }}</td>
+            <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+            <td>{{ entity.email }}</td>
+            <td>{{ entity.enabled }}</td>
+            <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{{ entity.locked }}</td>
+            <td>{{ entity.expired }}</td>
+            <td>
+                <ul class="list">
+                {%for role in entity.roles %}
+                    <li>{{role}}</li>
+                {%endfor%}
+                </ul>
+            </td>
+            <td>{{ entity.credentialsExpired }}</td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('user_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('user_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<ul class="list list-inline">
+    <li>
+        <a href="{{ path('user_new') }}">
+            Create a new entry
+        </a>
+    </li>
+</ul>
+{% endblock %}
+
+```
+
+編輯 src/Workshop/Bundle/BackendBundle/Resources/views/User/show.html.twig
+
+```jinja
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{% block main %}
+<h1>User</h1>
+
+<table class="record_properties table table-striped">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Username</th>
+            <td>{{ entity.username }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ entity.email }}</td>
+        </tr>
+        <tr>
+            <th>Enabled</th>
+            <td>{{ entity.enabled }}</td>
+        </tr>
+        <tr>
+            <th>Lastlogin</th>
+            <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Locked</th>
+            <td>{{ entity.locked }}</td>
+        </tr>
+        <tr>
+            <th>Expired</th>
+            <td>{{ entity.expired }}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>
+                <ul class="list">
+                {%for role in entity.roles %}
+                    <li>{{role}}</li>
+                {%endfor%}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Credentialsexpired</th>
+            <td>{{ entity.credentialsExpired }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions list list-inline">
+    <li>
+        <a href="{{ path('user') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('user_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
+```
+
