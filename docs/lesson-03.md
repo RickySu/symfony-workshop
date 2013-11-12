@@ -502,16 +502,9 @@ Generating the Form code: OK
 
 ```php
 <?php
-
-namespace Workshop\Bundle\BackendBundle\Form;
-
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-
 class UserType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -521,7 +514,9 @@ class UserType extends AbstractType
             ->add('username')
             ->add('email')
             ->add('enabled', 'checkbox', array('required' => false))
-            ->add('plain_password')
+            ->add('plain_password', 'password', array(
+                'required' => false,
+            ))
             ->add('plain_password', 'repeated', array(
                 'type' => 'password',
                 'first_options' => array(
@@ -530,6 +525,7 @@ class UserType extends AbstractType
                 'second_options' => array(
                     'label' => 'Password Again',
                 ),
+                'required' => false,
             ))
             ->add('locked', 'checkbox', array('required' => false))
             ->add('expired', 'checkbox', array('required' => false))
@@ -549,24 +545,8 @@ class UserType extends AbstractType
         ;
     }
 
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(array(
-            'data_class' => 'Workshop\Bundle\BackendBundle\Entity\User'
-        ));
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'workshop_bundle_backendbundle_user';
-    }
 }
+
 ```
 
 更新 Controller, 改用 userManager 更新 user。
