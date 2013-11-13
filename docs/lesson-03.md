@@ -135,7 +135,7 @@ class AppKernel extends Kernel
 }
 ```
 
-3) 設定 FOSUserBundle 參數
+4) 設定 FOSUserBundle 參數
 -------------------------
 
 編輯 app/config/config.yml 加入
@@ -157,7 +157,7 @@ Workshop\Bundle\BackendBundle\Entity\User
 
 firewall_name 暫時使用 secured_area，後面會在來修改。
 
-4) 指定密碼加密方式
+5) 指定密碼加密方式
 -----------------
 
 編輯 app/config/security.yml
@@ -170,14 +170,14 @@ security:
 
 FOSUserBundle 提供了多種加密方式，例如 md5, sha1, sha256, sha512 ...
 
-5) 更新資料庫
+6) 更新資料庫
 ------------
 
 ```
 app/console doctrine:schema:update --force
 ```
 
-6) 建立帳號
+7) 建立帳號
 ----------
 
 FOSUserBundle 提供了一個命令列工具用來建立帳號。
@@ -190,7 +190,7 @@ Please choose a password:12345
 Created user ricky
 ```
 
-7) 賦予角色
+8) 賦予角色
 ----------
 
 預設情況 FOSUserBundle 會給予每個帳號 ROLE_USER 的基本角色。
@@ -204,7 +204,7 @@ Please choose a role:ROLE_ADMIN
 Role "ROLE_ADMIN" has been added to user "ricky"
 ```
 
-8) 設定防火牆規則
+9) 設定防火牆規則
 ----------------
 
 Symfony 的安全設定都集中在 app/config/security.yml
@@ -261,7 +261,7 @@ fos_user_security:
     prefix: /admin
 ```
 
-9) 建立 User 管理 CRUD
+10) 建立 User 管理 CRUD
 ---------------------
 
 ```
@@ -650,7 +650,7 @@ security:
         </nav>
 ```
 
-10) 建立 Group 管理 CRUD
+11) 建立 Group 管理 CRUD
 ---------------------
 
 建立 Group Entity
@@ -906,7 +906,7 @@ class UserType extends AbstractType
 
 群組功能就輕鬆搞定了
 
-11) 客製化登入頁面
+12) 客製化登入頁面
 ----------------
 
 FOSUserBundle 提供了許多客製化登入頁面的方式
