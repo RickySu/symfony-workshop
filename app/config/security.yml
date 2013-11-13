@@ -15,6 +15,7 @@ security:
             pattern:       ^/(_(profiler|wdt)|css|images|js)/
             security:      false
         admin:
+            pattern:       ^/admin/
             form_login:
                 provider:        admin
                 csrf_provider:  form.csrf_provider

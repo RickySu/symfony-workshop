@@ -215,18 +215,19 @@ security:
         FOS\UserBundle\Model\UserInterface:              sha1
 
     role_hierarchy:
-        ROLE_ADMIN:        ROLE_USER
+        ROLE_ADMIN:             ROLE_USER
 
     providers:
         admin:
-            id:            fos_user.user_provider.username
+            id:                 fos_user.user_provider.username
 
     firewalls:
         dev:
-            pattern:       ^/(_(profiler|wdt)|css|images|js)/
-            security:      false
+            pattern:            ^/(_(profiler|wdt)|css|images|js)/
+            security:           false
 
         admin:
+            pattern:            ^/admin/
             form_login:
                 login_path:     fos_user_security_login
                 check_path:     fos_user_security_check
@@ -598,4 +599,53 @@ class UserController extends Controller
         );
     }
 }
+```
+
+
+重新規劃權限,區分 ROLE_CATEGORY, ROLE_POST, ROLE_SUPER_ADMIN 允許進入不同的功能。
+
+編輯 app/config/security.yml
+
+```yml
+security:
+
+    role_hierarchy:
+        ROLE_ADMIN:          ROLE_USER
+        ROLE_POST:           ROLE_ADMIN
+        ROLE_CATEGORY:       ROLE_ADMIN
+        ROLE_SUPER_ADMIN:    [ROLE_POST, ROLE_CATEGORY]
+
+    access_control:
+        - { path: ^/admin/login,    roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/category, roles: ROLE_CATEGORY }
+        - { path: ^/admin/post,     roles: ROLE_POST }
+        - { path: ^/admin/user,     roles: ROLE_SUPER_ADMIN }
+        - { path: ^/admin/,         roles: ROLE_ADMIN }
+
+```
+
+選單要隱藏不具權限的項目
+
+編輯 src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
+
+```jinja
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav">
+                {%if is_granted('ROLE_CATEGORY')%}
+                <li>
+                    <a href="{{path('category')}}">Category</a>
+                </li>
+                {%endif%}
+                {%if is_granted('ROLE_POST')%}
+                <li>
+                    <a href="{{path('post')}}">Post</a>
+                </li>
+                {%endif%}
+                {%if is_granted('ROLE_SUPER_ADMIN')%}
+                <li>
+                    <a href="{{path('user')}}">User</a>
+                </li>
+                {%endif%}
+            </ul>
+        </nav>
 ```
