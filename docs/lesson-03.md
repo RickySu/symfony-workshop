@@ -649,3 +649,140 @@ security:
             </ul>
         </nav>
 ```
+
+10) 建立 Group 管理 CRUD
+---------------------
+
+建立 Group Entity
+
+編輯 src/Workshop/Bundle/BackendBundle/Entity/Group.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Entity\Group as BaseGroup;
+
+/**
+ * Group
+ *
+ * @ORM\Table(name="fos_group")
+ * @ORM\Entity
+ */
+class Group extends BaseGroup
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function __construct($name = null, $roles = array())
+    {
+        parent::__construct($name, $roles);
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
+}
+```
+
+建立 User 跟 Group 的關聯 (多對多)
+
+編輯 src/Workshop/Bundle/BackendBundle/Entity/User.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Entity\User as BaseUser;
+
+/**
+ * User
+ *
+ * @ORM\Table(name="fos_user")
+ * @ORM\Entity
+ */
+class User extends BaseUser
+{
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Group")
+     * @ORM\JoinTable(name="fos_user_user_group",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     * @var Group[]
+     */
+    protected $groups;
+}
+```
+
+加入 Group 關聯
+
+啟用 FOSUserBundle Group 群組功能
+
+編輯 app/config/config.yml
+
+```yml
+fos_user:
+    db_driver:        orm
+    user_class:       WorkshopBackendBundle:User
+    firewall_name:    admin
+    group:
+        group_class:  WorkshopBackendBundle:Group
+```
+
+加上 group 項目
+
+補上群組管理路徑
+
+編輯 src/Workshop/Bundle/BackendBundle/Resources/views/Common/_header.html.twig
+
+```jinja
+        <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav">
+                {%if is_granted('ROLE_CATEGORY')%}
+                <li>
+                    <a href="{{path('category')}}">Category</a>
+                </li>
+                {%endif%}
+                {%if is_granted('ROLE_POST')%}
+                <li>
+                    <a href="{{path('post')}}">Post</a>
+                </li>
+                {%endif%}
+                {%if is_granted('ROLE_SUPER_ADMIN')%}
+                <li>
+                    <a href="{{path('group')}}">Group</a>
+                </li>
+                {%endif%}
+                {%if is_granted('ROLE_SUPER_ADMIN')%}
+                <li>
+                    <a href="{{path('user')}}">User</a>
+                </li>
+                {%endif%}
+            </ul>
+        </nav>
+```
+
