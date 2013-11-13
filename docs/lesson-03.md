@@ -786,3 +786,123 @@ fos_user:
         </nav>
 ```
 
+更新 Group Form
+
+編輯 src/Workshop/Bundle/BackendBundle/Form/GroupType.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class GroupType extends AbstractType
+{
+        /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name')
+            ->add('roles','choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Normal User',
+                    'ROLE_ADMIN' => 'Backend User',
+                    'ROLE_CATEGORY' => 'Backend Category Admin User',
+                    'ROLE_POST' => 'Backend Post Admin User',
+                    'ROLE_SUPER_ADMIN' => 'Backend Super Admin',
+                ),
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ))
+        ;
+    }
+
+}
+
+```
+
+加入群組權限頁表
+
+更新 User Form
+
+編輯 src/Workshop/Bundle/BackendBundle/Form/UserType.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class UserType extends AbstractType
+{
+        /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('username')
+            ->add('email')
+            ->add('enabled')
+            ->add('plain_password', 'password', array(
+                'required' => false,
+            ))
+            ->add('plain_password', 'repeated', array(
+                'required' => false,
+                'type' => 'password',
+                'first_options' => array(
+                    'label' => 'Password'
+                ),
+                'second_options' => array(
+                    'label' => 'Password Again'
+                ),
+                'invalid_message' => 'The password fields must match.',
+            ))
+            ->add('locked', 'checkbox', array(
+                'required' => false,
+                'value' => true,
+            ))
+            ->add('expired', 'checkbox', array(
+                'required' => false,
+                'value' => true,
+            ))
+            ->add('roles', 'choice', array(
+                'choices' => array(
+                    'ROLE_USER' => 'Normal User',
+                    'ROLE_ADMIN' => 'Backend User',
+                    'ROLE_CATEGORY' => 'Backend Category Admin User',
+                    'ROLE_POST' => 'Backend Post Admin User',
+                    'ROLE_SUPER_ADMIN' => 'Backend Super Admin',
+                ),
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ))
+            ->add('groups', 'entity', array(
+                'class' => 'WorkshopBackendBundle:Group',
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+            ))
+        ;
+    }
+
+}
+
+```
+
+將 User Form 加入 groups 欄位
+
+群組功能就輕鬆搞定了
+
