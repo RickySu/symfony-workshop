@@ -906,3 +906,110 @@ class UserType extends AbstractType
 
 群組功能就輕鬆搞定了
 
+11) 客製化登入頁面
+----------------
+
+FOSUserBundle 提供了許多客製化登入頁面的方式
+
+1. 建立 app/Resources/FOSUserBundle/views/Security/login.html.twig
+
+2. 建立一個新的 Bundle 並且繼承 FOSUserBundle, 修改 Bundle/views/Security/login.html.twig
+
+但以上這兩個方式對於我們只是要作一個後台的登入頁面還是不太方便。
+
+因此我們直接建立一個 Login Controller 來解決這個問題。
+
+首先新增一個 Login Page Action。
+
+編輯 src/Workshop/Bundle/BackendBundle/Controller/DefaultController.php
+
+```php
+<?php
+class DefaultController extends Controller
+{
+    /**
+     * @Route("/login", name="@BackendLogin")
+     * @Template()
+     */
+    public function loginAction()
+    {
+        $request = $this->getRequest();
+        $session = $request->getSession();
+        $csrfToken = $this->get('form.csrf_provider')->generateCsrfToken('authenticate');
+        $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+        return array(
+            'csrfToken' => $csrfToken,
+            'lastUsername' => $session->get(SecurityContext::LAST_USERNAME),
+            'error' => ($error?$error->getMessage():null),
+        );
+    }
+}
+```
+
+登入頁面 View
+
+編輯 src/Workshop/Bundle/BackendBundle/Resource/view/Default/login.html.twig
+
+```jinja
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{%block header%} {%endblock%}
+{%block footer%} {%endblock%}
+
+{%block main%}
+
+{% if error %}
+<div>{{ error|trans({}, 'FOSUserBundle') }}</div>
+{% endif %}
+<div class="col-sm-offset-1 col-sm-10">
+  <div class="thumbnail container">
+<div class="col-sm-offset-1 col-sm-10">
+    <form action="{{ path("fos_user_security_check") }}" method="post" role="form"  class="form-horizontal">
+        <input type="hidden" name="_csrf_token" value="{{ csrfToken }}" />
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="username">Username</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="text" id="username" name="_username" value="{{ lastUsername }}" required="required" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="password">Password</label>
+            <div class="col-sm-10">
+                <input class="form-control" type="password" id="password" name="_password" required="required" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label for="remember_me">
+                        Remember me!
+                        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                    </label>
+                </div>
+            </div>
+        </div>
+        <input  class="btn btn-default" type="submit" id="_submit" name="_submit" value="Login" />
+    </form>
+  </div>
+</div>
+</div>
+{%endblock%}
+```
+
+修改 security.yml 將登入頁面改成我們自訂的 Controller。
+
+編輯 app/config/security.yml
+
+```yml
+security:
+    firewalls:
+        admin:
+            pattern:       ^/admin/
+            form_login:
+                provider:        admin
+                csrf_provider:  form.csrf_provider
+                login_path:     @BackendLogin
+                check_path:     fos_user_security_check
+```
+
+將 login_path 改為 @BackendLogin
