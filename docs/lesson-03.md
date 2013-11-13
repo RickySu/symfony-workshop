@@ -925,6 +925,13 @@ FOSUserBundle 提供了許多客製化登入頁面的方式
 
 ```php
 <?php
+namespace Workshop\Bundle\BackendBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\SecurityContext;
+
 class DefaultController extends Controller
 {
     /**
