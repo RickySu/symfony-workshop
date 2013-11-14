@@ -66,8 +66,8 @@ swiftmailer:
     spool:     { type: memory }
 
 fos_user:
-    db_driver:    orm
-    user_class:   Workshop\Bundle\BackendBundle\Entity\User
-    firewall_name:     secured_area
+    db_driver:          orm
+    user_class:         Workshop\Bundle\BackendBundle\Entity\User
+    firewall_name:      admin
     group:
         group_class:    Workshop\Bundle\BackendBundle\Entity\Group
