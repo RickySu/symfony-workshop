@@ -1,5 +1,7 @@
 {%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
 
+{%set currentCategory = category%}
+
 {% block content %}
 {%include "WorkshopFrontendBundle:Post:_list.html.twig" with {posts: posts}%}
 {% endblock %}

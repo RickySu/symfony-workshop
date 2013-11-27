@@ -1,0 +1,12 @@
+.main-content{
+    margin:  50px 0 0 0;
+    min-height:    300px;
+}
+
+.bs-footer{
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #E5E5E5;
+    border-top: 1px solid #FFFFFF;
+    color: #777777;
+    padding: 15px 20px;    
+}

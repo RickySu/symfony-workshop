@@ -9,11 +9,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/hello/{name}")
+     * @Route("/")
      * @Template()
      */
-    public function indexAction($name)
+    public function indexAction()
     {
-        return array('name' => $name);
+        $em = $this->getDoctrine()->getManager();
+        $posts = $em->getRepository('WorkshopBackendBundle:Post')
+                ->findBy(array(), array('updatedAt' => 'desc'));
+        return array('posts'=>$posts);
     }
 }

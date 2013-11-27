@@ -1,0 +1,5 @@
+<ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
+    {%for category in categories%}
+    <li{%if currentCategory and currentCategory.id == category.id%} class="active"{%endif%}><a href="{{path('@categoyIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
+    {%endfor%}
+</ul>

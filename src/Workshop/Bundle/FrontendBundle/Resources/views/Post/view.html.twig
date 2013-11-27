@@ -1,0 +1,13 @@
+{%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
+{% form_theme form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+
+{% block content %}
+<div class="page-header">
+    <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
+</div>
+<p>{{post.content|nl2br}}</p>
+<h2>Comments</h2>
+{{render(controller("WorkshopFrontendBundle:Post:_comments", {id: post.id}))}}
+<h2>Add a Comment</h2>
+{{form(form)}}
+{% endblock %}

@@ -1,0 +1,11 @@
+{%if currentCategory is not defined%}
+{%set currentCategory = null%}
+{%endif%}
+{%extends "WorkshopFrontendBundle:Layout:bootstrapLayout.html.twig"%}
+
+{%block main%}
+<div class="row">
+    <div class="col-md-3">{%render(controller("WorkshopFrontendBundle:Category:_category", {currentCategory: currentCategory}))%}</div>
+    <div class="col-md-9" role="main">{%block content%}{%endblock%}</div>
+</div>
+{%endblock%}

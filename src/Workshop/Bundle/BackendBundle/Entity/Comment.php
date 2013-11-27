@@ -11,20 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks()
  */
-class Post
+class Comment
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
-     * @var Post[]
-     */
-    protected $comments;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @var Category
      */
-    protected $category;
+    protected $post;
 
     /**
      * @var integer
@@ -38,9 +32,9 @@ class Post
     /**
      * @var string
      *
-     * @ORM\Column(name="subject", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $subject;
+    private $name;
 
     /**
      * @var string
@@ -63,109 +57,6 @@ class Post
      */
     private $updatedAt;
 
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set subject
-     *
-     * @param string $subject
-     * @return Post
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    /**
-     * Get subject
-     *
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
-    }
-
-    /**
-     * Set content
-     *
-     * @param string $content
-     * @return Post
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * Get content
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     * @return Post
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set updatedAt
-     *
-     * @param \DateTime $updatedAt
-     * @return Post
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get updatedAt
-     *
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
     /**
      * @ORM\PrePersist
      */
@@ -183,26 +74,129 @@ class Post
         $this->setUpdatedAt(new \Datetime());
     }
 
-    /**
-     * Set category
-     *
-     * @param \Workshop\Bundle\BackendBundle\Entity\Category $category
-     * @return Post
-     */
-    public function setCategory(\Workshop\Bundle\BackendBundle\Entity\Category $category = null)
-    {
-        $this->category = $category;
 
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Comment
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
         return $this;
     }
 
     /**
-     * Get category
+     * Get name
      *
-     * @return \Workshop\Bundle\BackendBundle\Entity\Category
+     * @return string 
      */
-    public function getCategory()
+    public function getName()
     {
-        return $this->category;
+        return $this->name;
+    }
+
+    /**
+     * Set content
+     *
+     * @param string $content
+     * @return Comment
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    
+        return $this;
+    }
+
+    /**
+     * Get content
+     *
+     * @return string 
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Comment
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Comment
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set post
+     *
+     * @param \Workshop\Bundle\BackendBundle\Entity\Post $post
+     * @return Comment
+     */
+    public function setPost(\Workshop\Bundle\BackendBundle\Entity\Post $post = null)
+    {
+        $this->post = $post;
+    
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return \Workshop\Bundle\BackendBundle\Entity\Post 
+     */
+    public function getPost()
+    {
+        return $this->post;
     }
 }

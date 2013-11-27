@@ -1,0 +1,6 @@
+{%for comment in comments%}
+<div class="thumbnail">
+    <h3>{{comment.name}} <small>{{comment.createdAt|date('Y-m-d H:i:s')}}</small></h3>
+    <p>{{comment.content|nl2br}}</p>
+</div>
+{%endfor%}
