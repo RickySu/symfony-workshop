@@ -1,7 +1,9 @@
 {%if currentCategory is not defined%}
 {%set currentCategory = null%}
 {%endif%}
-{%extends "WorkshopFrontendBundle:Layout:bootstrapLayout.html.twig"%}
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+{%block header%}{%include "WorkshopFrontendBundle:Common:_header.html.twig"%}{%endblock%}
+{%block footer%}{%include "WorkshopFrontendBundle:Common:_footer.html.twig"%}{%endblock%}
 
 {%block main%}
 <div class="row">
