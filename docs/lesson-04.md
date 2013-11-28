@@ -226,7 +226,7 @@ src/Workshop/Bundle/FrontendBundle/Controller/CategoryController.php
 class CategoryController extends Controller
 {
     /**
-     * @Route("/{id}-{name}", name="@categoyIndex")
+     * @Route("/{id}-{name}", name="@categoryIndex")
      * @Template()
      */
     public function indexAction(Entity\Category $category)
@@ -258,7 +258,7 @@ src/Workshop/Bundle/FrontendBundle/Resources/views/Category/_category.html.twig
 ```jinja
 <ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
     {%for category in categories%}
-    <li><a href="{{path('@categoyIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
+    <li><a href="{{path('@categoryIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
     {%endfor%}
 </ul>
 ```
@@ -333,7 +333,7 @@ src/Workshop/Bundle/FrontendBundle/Resources/views/Category/_category.html.twig
 ```jinja
 <ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
     {%for category in categories%}
-    <li{%if currentCategory and currentCategory.id == category.id%} class="active"{%endif%}><a href="{{path('@categoyIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
+    <li{%if currentCategory and currentCategory.id == category.id%} class="active"{%endif%}><a href="{{path('@categoryIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
     {%endfor%}
 </ul>
 ```
