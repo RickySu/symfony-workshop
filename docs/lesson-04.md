@@ -338,4 +338,63 @@ src/Workshop/Bundle/FrontendBundle/Resources/views/Category/_category.html.twig
 </ul>
 ```
 
-7) 補上
+7) 加入檢視文章內容
+-----------------
+
+建立 Post Controller。
+
+src/Workshop/Bundle/FrontendBundle/Controller/PostController.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\FrontendBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Workshop\Bundle\BackendBundle\Entity;
+
+/**
+ * @Route("/post")
+ */
+class PostController extends Controller
+{
+    /**
+     * @Route("/{id}-{subject}.html", name="@postView")
+     * @Template()
+     */
+    public function viewAction(Entity\Post $post)
+    {
+        return array('post' => $post);
+    }
+}
+```
+
+編輯對應的 view。
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Post/view.html.twig
+
+```jinja
+{%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
+
+{% block content %}
+<div class="page-header">
+    <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
+</div>
+<p>{{post.content|nl2br}}</p>
+```
+
+幫文章列表的 partial view 補上連結
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Post/_list.html.twig
+
+```jinja
+{%for post in posts%}
+<div class="page-header">
+    <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
+</div>
+<p>{{post.content}}</p>
+{%endfor%}
+```
+
