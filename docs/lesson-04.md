@@ -188,5 +188,53 @@ class CategoryController extends Controller
 src/Workshop/Bundle/FrontendBundle/Resources/views/Category/_category.html.twig
 
 ```jinja
+<ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
+    {%for category in categories%}
+    <li><a href="">{{category.name}}</a></li>
+    {%endfor%}
+</ul>
 ```
 
+修改 Sidebar Layout，將目錄列表的內容 redner 出來。
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Layout/sidebarLayout.html.twig
+
+```jinja
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+{%block header%}{%include "WorkshopFrontendBundle:Common:_header.html.twig"%}{%endblock%}
+{%block footer%}{%include "WorkshopFrontendBundle:Common:_footer.html.twig"%}{%endblock%}
+
+{%block main%}
+<div class="row">
+    <div class="col-md-3">{%render(controller("WorkshopFrontendBundle:Category:_category", {currentCategory: currentCategory}))%}</div>
+    <div class="col-md-9" role="main">{%block content%}{%endblock%}</div>
+</div>
+{%endblock%}
+```
+
+5) 建立目錄檢視
+--------------
+
+src/Workshop/Bundle/FrontendBundle/Controller/CategoryController.php
+
+補上一個 categoryAction
+
+```php
+/**
+ * @Route("/category")
+ */
+class CategoryController extends Controller
+{
+    /**
+     * @Route("/{id}-{name}", name="@categoyIndex")
+     * @Template()
+     */
+    public function indexAction(Entity\Category $category)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $posts = $em->getRepository('WorkshopBackendBundle:Post')
+                ->findBy(array('category' => $category), array('updatedAt' => 'desc'));
+        return array('category' => $category, 'posts' => $posts);
+    }
+}
+```
