@@ -238,3 +238,104 @@ class CategoryController extends Controller
     }
 }
 ```
+
+設定對應的 view
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Category/index.html.twig
+
+```jinja
+{%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
+
+{% block content %}
+{%include "WorkshopFrontendBundle:Post:_list.html.twig" with {posts: posts}%}
+{% endblock %}
+```
+
+目錄列表(Sidebar)補上 Link
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Category/_category.html.twig
+
+```jinja
+<ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
+    {%for category in categories%}
+    <li><a href="{{path('@categoyIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
+    {%endfor%}
+</ul>
+```
+
+6) 讓目前檢視中的 Category Highlight
+----------------------------------
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Category/index.html.twig
+
+```jinja
+{%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
+{%set currentCategory = category%}
+{% block content %}
+{%include "WorkshopFrontendBundle:Post:_list.html.twig" with {posts: posts}%}
+{% endblock %}
+```
+
+指定一個 global 的樣板變數 currentCategory
+
+修改 Layout
+將 currentCategory 傳遞給 Category:_categoryAction。
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Layout/sidebarLayout.html.twig
+
+```jinja
+{%if currentCategory is not defined%}
+{%set currentCategory = null%}
+{%endif%}
+{%extends "WorkshopBackendBundle:Layout:bootstrapLayout.html.twig"%}
+{%block header%}{%include "WorkshopFrontendBundle:Common:_header.html.twig"%}{%endblock%}
+{%block footer%}{%include "WorkshopFrontendBundle:Common:_footer.html.twig"%}{%endblock%}
+
+{%block main%}
+<div class="row">
+    <div class="col-md-3">{%render(controller("WorkshopFrontendBundle:Category:_category", {currentCategory: currentCategory}))%}</div>
+    <div class="col-md-9" role="main">{%block content%}{%endblock%}</div>
+</div>
+{%endblock%}
+```
+
+修改 Category:_categoryAction，接收 currentCategory 參數，並傳遞給對應的 view。
+
+src/Workshop/Bundle/FrontendBundle/Controller/CategoryController.php
+
+```php
+/**
+ * @Route("/category")
+ */
+class CategoryController extends Controller
+{
+    /**
+     * @Template()
+     */
+    public function _categoryAction()
+    {
+        $currentCategory = $this->getRequest()->get('currentCategory');
+        $em = $this->getDoctrine()->getManager();
+        $categories = $em->getRepository('WorkshopBackendBundle:Category')
+                ->createQueryBuilder('c')
+                ->orderBy('c.id', 'asc')
+                ->getQuery()
+                ->getResult();
+        return array('categories' => $categories, 'currentCategory' => $currentCategory);
+    }
+}
+```
+
+修改 view。
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Category/_category.html.twig
+
+```jinja
+<ul style="max-width: 300px;" class="nav nav-pills nav-stacked">
+    {%for category in categories%}
+    <li{%if currentCategory and currentCategory.id == category.id%} class="active"{%endif%}><a href="{{path('@categoyIndex', {id: category.id, name: category.name})}}">{{category.name}}</a></li>
+    {%endfor%}
+</ul>
+```
+
+7) 補上
