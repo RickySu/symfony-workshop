@@ -383,6 +383,7 @@ src/Workshop/Bundle/FrontendBundle/Resources/views/Post/view.html.twig
     <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
 </div>
 <p>{{post.content|nl2br}}</p>
+{% endblock %}
 ```
 
 幫文章列表的 partial view 補上連結
