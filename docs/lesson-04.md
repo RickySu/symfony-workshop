@@ -467,4 +467,99 @@ Generating the entity code: OK
 
 ```
 
+建立 Post 跟 Comment 的關聯。
+
+編輯 src/Workshop/Bundle/BackendBundle/Entity/Post.php
+
+```php
+<?php
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Post
+ *
+ * @ORM\Table()
+ */
+class Post
+{
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="category")
+     * @var Comment[]
+     */
+    protected $comments;
+}
+```
+
+編輯 src/Workshop/Bundle/BackendBundle/Entity/Comment.php
+
+```php
+<?php
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Comment
+ *
+ * @ORM\Table()
+ */
+class Comment
+{
+    /**
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
+     * @var Post
+     */
+    protected $post;
+}
+```
+
+將 Comment Entity 加入建立時間以及更新時間。
+
+編輯 src/Workshop/Bundle/BackendBundle/Entity/Comment.php
+
+```php
+<?php
+namespace Workshop\Bundle\BackendBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Comment
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table()
+ */
+class Comment
+{
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->setCreatedAt(new \Datetime());
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->setUpdatedAt(new \Datetime());
+    }
+}
+```
+
+更新 Comment Entity
+
+```
+app/console doctrine:generate:entities WorkshopBackendBundle:Comment
+```
+
+更新 Post Entity
+
+```
+app/console doctrine:generate:entities WorkshopBackendBundle:Post
+```
 
