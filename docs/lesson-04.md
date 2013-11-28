@@ -399,3 +399,72 @@ src/Workshop/Bundle/FrontendBundle/Resources/views/Post/_list.html.twig
 {%endfor%}
 ```
 
+8) 建立文章回應 entity
+---------------------
+
+建立 entity
+
+app/console doctrine:generate:entity
+
+```
+
+  Welcome to the Doctrine2 entity generator
+
+
+
+This command helps you generate Doctrine2 entities.
+
+First, you need to give the entity name you want to generate.
+You must use the shortcut notation like AcmeBlogBundle:Post.
+
+The Entity shortcut name: WorkshopBackendBundle:Comment
+
+Determine the format to use for the mapping information.
+
+Configuration format (yml, xml, php, or annotation) [annotation]:
+
+Instead of starting with a blank entity, you can add some fields now.
+Note that the primary key will be added automatically (named id).
+
+Available types: array, simple_array, json_array, object,
+boolean, integer, smallint, bigint, string, text, datetime, datetimetz,
+date, time, decimal, float, blob, guid.
+
+New field name (press <return> to stop adding fields): name
+Field type [string]:
+Field length [255]:
+
+New field name (press <return> to stop adding fields): content
+Field type [string]: text
+
+New field name (press <return> to stop adding fields): created_at
+Field type [datetime]:
+
+New field name (press <return> to stop adding fields): updated_at
+Field type [datetime]:
+
+New field name (press <return> to stop adding fields):
+
+Do you want to generate an empty repository class [no]?
+
+
+  Summary before generation
+
+
+You are going to generate a "WorkshopBackendBundle:Comment" Doctrine2 entity
+using the "annotation" format.
+
+Do you confirm generation [yes]?
+
+
+  Entity generation
+
+
+Generating the entity code: OK
+
+
+  You can now start using the generated code!
+
+```
+
+
