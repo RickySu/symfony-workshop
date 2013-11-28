@@ -5,6 +5,7 @@ namespace Workshop\Bundle\FrontendBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints;
 
 class CommentType extends AbstractType
 {
@@ -15,9 +16,13 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('content')
-            ->add('send', 'submit')
+            ->add('name', 'text', array(
+                'constraints' => new Constraints\NotBlank(),
+            ))
+            ->add('content', 'textarea', array(
+                'constraints' => new Constraints\NotBlank(),
+            ))
+            ->add('add', 'submit')
         ;
     }
 

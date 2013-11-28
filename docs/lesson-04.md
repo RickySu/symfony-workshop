@@ -399,7 +399,7 @@ src/Workshop/Bundle/FrontendBundle/Resources/views/Post/_list.html.twig
 {%endfor%}
 ```
 
-8) 建立文章回應 entity
+8) 建立文章回應 Comment entity
 ---------------------
 
 建立 entity
@@ -563,3 +563,174 @@ app/console doctrine:generate:entities WorkshopBackendBundle:Comment
 app/console doctrine:generate:entities WorkshopBackendBundle:Post
 ```
 
+同步資料庫
+
+```
+app/console doctrine:schema:update --force
+```
+
+8) 建立文章回應 Comment Form
+---------------------------
+
+新增 src/Workshop/Bundle/FrontendBundle/Form/CommentType.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\FrontendBundle\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints;
+
+class CommentType extends AbstractType
+{
+        /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('name', 'text', array(
+                'constraints' => new Constraints\NotBlank(),
+            ))
+            ->add('content', 'textarea', array(
+                'constraints' => new Constraints\NotBlank(),
+            ))
+            ->add('Add', 'submit')
+        ;
+    }
+
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Workshop\Bundle\BackendBundle\Entity\Comment'
+        ));
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'comment';
+    }
+}
+
+```
+
+Post Controller viewAction 加入 Form
+
+src/Workshop/Bundle/FrontendBundle/Controller/PostController.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\FrontendBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Workshop\Bundle\BackendBundle\Entity;
+use Workshop\Bundle\FrontendBundle\Form;
+
+/**
+ * @Route("/post")
+ */
+class PostController extends Controller
+{
+    /**
+     * @Route("/{id}-{subject}.html", name="@postView")
+     * @Template()
+     */
+    public function viewAction(Entity\Post $post)
+    {
+        $comment = new Entity\Comment();
+        $comment->setPost($post);
+        $form = $this->createForm(new Form\CommentType(), $comment);
+        $form->handleRequest($this->getRequest());
+        if($form->isValid()){
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+            return $this->redirect($this->generateUrl('@postView', array('id' => $post->getId(), 'subject' => $post->getSubject())));
+        }
+        return array('post' => $post, 'form' => $form->createView());
+    }
+}
+```
+
+修改對應的 view 加入表單
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Post/view.html.twig
+
+```jinja
+{%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
+
+{% block content %}
+<div class="page-header">
+    <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
+</div>
+<p>{{post.content|nl2br}}</p>
+<h2>Add a Comment</h2>
+{{form(form)}}
+{% endblock %}
+```
+
+加入檢視回應
+
+src/Workshop/Bundle/FrontendBundle/Controller/PostController.php
+
+```php
+class PostController extends Controller
+{
+    /**
+     *
+     * @Template()
+     */
+    public function _commentsAction(Entity\Post $post)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $comments = $em->getRepository('WorkshopBackendBundle:Comment')
+           ->findBy(array('post' => $post), array('updatedAt' => 'asc'));
+        return array('comments' => $comments);
+    }
+}
+```
+
+編輯對應的 view
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Post/_comments.html.twig
+
+```jinja
+{%for comment in comments%}
+<div class="thumbnail">
+    <h3>{{comment.name}} <small>{{comment.createdAt|date('Y-m-d H:i:s')}}</small></h3>
+    <p>{{comment.content|nl2br}}</p>
+</div>
+{%endfor%}
+```
+
+顯示文章回應內容
+
+src/Workshop/Bundle/FrontendBundle/Resources/views/Post/view.html.twig
+
+```jinja
+{%extends "WorkshopFrontendBundle:Layout:sidebarLayout.html.twig"%}
+
+{% block content %}
+<div class="page-header">
+    <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
+</div>
+<p>{{post.content|nl2br}}</p>
+<h2>Comments</h2>
+{{render(controller("WorkshopFrontendBundle:Post:_comments", {id: post.id}))}}
+<h2>Add a Comment</h2>
+{{form(form)}}
+{% endblock %}
+```
