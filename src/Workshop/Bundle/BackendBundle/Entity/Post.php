@@ -3,6 +3,7 @@
 namespace Workshop\Bundle\BackendBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Post
@@ -13,6 +14,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Post
 {
+
+    /**
+     *
+     * @var UploadedFile
+     */
+    protected $file;
 
     /**
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post")
@@ -63,6 +70,12 @@ class Post
      */
     private $updatedAt;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="filename", type="string", length=255, nullable=true)
+     */
+    private $filename;
 
     /**
      * Get id
@@ -204,5 +217,63 @@ class Post
     public function getCategory()
     {
         return $this->category;
+    }
+
+    protected function getUploadRootDir()
+    {
+        return realpath(__DIR__.'/../../../../../web/'.$this->getUploadDir());
+    }
+
+    protected function getUploadDir()
+    {
+        return 'uploads/images';
+    }
+
+    public function getWebPath()
+    {
+        if($this->filename === null){
+            return null;
+        }
+
+        return $this->getUploadDir().'/'.$this->filename;
+    }
+
+    public function getAbsolutePath()
+    {
+        if($this->filename === null){
+            return null;
+        }
+        return $this->getUploadRootDir().'/'.$this->filename;
+    }
+
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function upload()
+    {
+        if($this->file === null){
+            return;
+        }
+
+        if(!file_exists($this->getUploadRootDir().'/'.$this->getUploadDir())){
+            mkdir($this->getUploadRootDir().'/'.$this->getUploadDir(), 0777, true);
+        }
+
+        $this->filename = "{$this->getId()}.{$this->getFile()->guessExtension()}";
+
+        $this->getFile()->move($this->getUploadRootDir(), $this->filename);
+
+        $this->setFile(null);
     }
 }
