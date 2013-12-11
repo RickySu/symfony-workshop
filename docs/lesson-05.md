@@ -284,6 +284,7 @@ parameters:
 將目前版號設成第 10 版
 
 3) 啟用 Assetic Filter
+----------------------
 
 app/config.yml
 
@@ -342,3 +343,221 @@ npm -g install uglify-js2
 npm -g install uglifycss
 ```
 
+安裝 stylus
+
+```
+npm -g install stylus
+```
+
+安裝 coffeescript
+
+```
+npm -g install coffee-script
+```
+
+安裝 stylus
+
+```
+npm -g install stylus
+```
+
+[下載 Bootstrap][0]
+
+將 css, js, font 解開後放到 src/Workshop/Bundle/FrontendBundle/Resources/public
+
+[下載 jQuery][1]
+
+將 jquery-1.x.min.js 放到 src/Workshop/Bundle/FrontendBundle/Resources/public/js/
+
+編輯 src/Workshop/Bundle/BackendBundle/Resources/views/Layout/bootstrapLayout.html.twig
+
+```jinja
+{%extends "::base.html.twig"%}
+
+{%if edit_form is defined%}
+    {% form_theme edit_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if delete_form is defined%}
+    {% form_theme delete_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if form is defined%}
+    {% form_theme form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+
+{%block javascripts%}
+{{parent()}}
+{% javascripts
+    'bundles/workshopbackend/js/jquery.min.js'
+    'bundles/workshopbackend/js/bootstrap.min.js'
+    output='js/backendbase.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{%endblock%}
+
+{%block stylesheets%}
+{{parent()}}
+{% stylesheets
+    'bundles/workshopbackend/css/bootstrap.min.css'
+    'bundles/workshopbackend/css/bootstrap-theme.min.css'
+    'bundles/workshopbackend/css/main.css'
+    output='css/backendbase.css'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{%endblock%}
+
+{%block body%}
+    {%block header%}{%include "WorkshopBackendBundle:Common:_header.html.twig"%}{%endblock%}
+    <div class="container main-content">{%block main%}{%endblock%}</div>
+    {%block footer%}{%include "WorkshopBackendBundle:Common:_footer.html.twig"%}{%endblock%}
+{%endblock%}
+```
+
+編輯 src/Workshop/Bundle/FrontentendBundle/Resources/views/Layout/bootstrapLayout.html.twig
+
+```jinja
+{%extends "::base.html.twig"%}
+
+{%if edit_form is defined%}
+    {% form_theme edit_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if delete_form is defined%}
+    {% form_theme delete_form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+{%if form is defined%}
+    {% form_theme form 'WorkshopBackendBundle:Common:_form.html.twig' %}
+{%endif%}
+
+{%block javascripts%}
+{{parent()}}
+{% javascripts
+    'bundles/workshopbackend/js/jquery.min.js'
+    'bundles/workshopbackend/js/bootstrap.min.js'
+    output='js/frontendbase.js'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{%endblock%}
+
+{%block stylesheets%}
+{{parent()}}
+{% stylesheets
+    'bundles/workshopbackend/css/bootstrap.min.css'
+    'bundles/workshopbackend/css/bootstrap-theme.min.css'
+    'bundles/workshopfrontend/css/main.stylus'
+    output='css/frontendbase.css'
+%}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{%endblock%}
+
+{%block body%}
+    {%block header%}{%include "WorkshopBackendBundle:Common:_header.html.twig"%}{%endblock%}
+    <div class="container main-content">{%block main%}{%endblock%}</div>
+    {%block footer%}{%include "WorkshopBackendBundle:Common:_footer.html.twig"%}{%endblock%}
+{%endblock%}
+```
+
+編輯 src/Workshop/Bundle/FrontentendBundle/Resources/views/Layout/sidebarLayout.html.twig
+
+```jinja
+{%if currentCategory is not defined%}
+{%set currentCategory = null%}
+{%endif%}
+{%extends "WorkshopFrontendBundle:Layout:bootstrapLayout.html.twig"%}
+{%block header%}{%include "WorkshopFrontendBundle:Common:_header.html.twig"%}{%endblock%}
+{%block footer%}{%include "WorkshopFrontendBundle:Common:_footer.html.twig"%}{%endblock%}
+
+{%block main%}
+<div class="row">
+    <div class="col-md-3">{%render(controller("WorkshopFrontendBundle:Category:_category", {currentCategory: currentCategory}))%}</div>
+    <div class="col-md-9" role="main">{%block content%}{%endblock%}</div>
+</div>
+{%endblock%}
+```
+
+編輯 src/Workshop/Bundle/FrontentendBundle/Resources/css/main.stylus
+
+```yml
+.main-content
+    margin:        50px 0 0 0
+    min-height:    300px
+
+.bs-footer
+    background-color:  #FAFAFA
+    border-bottom:     1px solid #E5E5E5
+    border-top:        1px solid #FFFFFF
+    color:             #777777
+    padding:           15px 20px
+```
+
+重新打包 css 跟 js
+
+```
+app/console assetic:dump
+```
+
+如果是要正式發行 (Production mode)
+
+```
+app/console assetic:dump -e prod
+```
+
+讓 symfony 自動監視，一有異動就執行 dump 動作 (注意: 這個動作只能在開發模式中執行)
+
+```
+app/console assetic:dump --watch --period 1
+```
+
+symfony 就會每隔1秒鐘去檢查所有的 js, css 以及 template，並且執行 dump。
+
+4) 啟用 LiveReload
+------------------
+
+安裝 ruby
+
+```
+sudo apt-add-repository ppa:brightbox/ruby-ng-experimental
+sudo apt-get update
+sudo apt-get install ruby2.0 ruby2.0-dev
+```
+
+安裝 guard-livereload
+
+```
+sudo gem install guard-livereload
+```
+
+安裝 browser extension
+
+[http://feedback.livereload.com/knowledgebase/articles/86242-how-do-i-install-and-use-the-browser-extensions-][3]
+
+根據對應的瀏覽器安裝外掛
+
+編輯 Guardfile 位於專案根目錄
+
+```ruby
+# A sample Guardfile
+# More info at https://github.com/guard/guard#readme
+
+guard 'livereload' do
+  watch(%r{web/.+\.(css|js|html)})
+end
+```
+
+開始執行 live-reload
+
+```
+guard
+
+17:52:36 - INFO - Guard is using NotifySend to send notifications.
+17:52:36 - INFO - Guard is using TerminalTitle to send notifications.
+17:52:36 - INFO - LiveReload is waiting for a browser to connect.
+17:52:36 - INFO - Guard is now watching at '/home/symfony/php/symfony-workshop'
+[1] guard(main)>
+```
+
+[0]:  http://getbootstrap.com/
+[1]:  http://jquery.com/download/
+[3]:  http://feedback.livereload.com/knowledgebase/articles/86242-how-do-i-install-and-use-the-browser-extensions-
