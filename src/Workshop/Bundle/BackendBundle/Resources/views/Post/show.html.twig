@@ -12,7 +12,7 @@
         <tr>
             <th>Category</th>
             <td>{%if entity.category%}{{ entity.category.name }}{%endif%}</td>
-        </tr>            
+        </tr>
         <tr>
             <th>Subject</th>
             <td>{{ entity.subject }}</td>
@@ -28,6 +28,10 @@
         <tr>
             <th>Updatedat</th>
             <td>{{ entity.updatedAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Image</th>
+            <td><img src="{{ asset(entity.webPath) }}" /></td>
         </tr>
     </tbody>
 </table>

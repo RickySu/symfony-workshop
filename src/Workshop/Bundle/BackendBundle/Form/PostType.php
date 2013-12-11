@@ -5,6 +5,7 @@ namespace Workshop\Bundle\BackendBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints;
 
 class PostType extends AbstractType
 {
@@ -18,9 +19,16 @@ class PostType extends AbstractType
             ->add('subject')
             ->add('content')
             ->add('category')
+            ->add('file', 'file', array(
+                'constraints' => array(
+                    new Constraints\Image(array(
+                        'maxSize' => 6000000
+                    ))
+                )
+            ))
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

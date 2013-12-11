@@ -5,6 +5,7 @@
 <div class="page-header">
     <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
 </div>
+<img src="{{asset(post.webPath)}}" class="thumbnail"/>
 <p>{{post.content|nl2br}}</p>
 <h2>Comments</h2>
 {{render(controller("WorkshopFrontendBundle:Post:_comments", {id: post.id}))}}

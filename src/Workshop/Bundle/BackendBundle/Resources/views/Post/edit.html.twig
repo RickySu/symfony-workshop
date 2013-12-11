@@ -2,7 +2,7 @@
 
 {% block main %}
 <h1>Post edit</h1>
-
+    <img class="thumbnail" src="{{asset(entity.webPath)}}" />
     {{ form(edit_form) }}
 
 <ul class="record_actions list list-inline">

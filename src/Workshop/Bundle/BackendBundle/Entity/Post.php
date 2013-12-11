@@ -221,7 +221,7 @@ class Post
 
     protected function getUploadRootDir()
     {
-        return realpath(__DIR__.'/../../../../../web/'.$this->getUploadDir());
+        return realpath(__DIR__.'/../../../../../web').'/'.$this->getUploadDir();
     }
 
     protected function getUploadDir()
@@ -266,8 +266,8 @@ class Post
             return;
         }
 
-        if(!file_exists($this->getUploadRootDir().'/'.$this->getUploadDir())){
-            mkdir($this->getUploadRootDir().'/'.$this->getUploadDir(), 0777, true);
+        if(!file_exists($this->getUploadRootDir())){
+            mkdir($this->getUploadRootDir(), 0777, true);
         }
 
         $this->filename = "{$this->getId()}.{$this->getFile()->guessExtension()}";

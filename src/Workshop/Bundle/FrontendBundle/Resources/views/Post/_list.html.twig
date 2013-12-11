@@ -2,5 +2,8 @@
 <div class="page-header">
     <a href="{{path('@postView', {id: post.id, subject: post.subject})}}"><h1>{{post.subject}} <small>{{post.createdAt|date('Y-m-d H:i:s')}}</small></h1></a>
 </div>
-<p>{{post.content}}</p>
+<div class="container">
+    <img src="{{asset(post.webPath)}}" class="col-md-3"/>
+    <p class="col-md-9">{{post.content}}</p>
+</div>
 {%endfor%}
