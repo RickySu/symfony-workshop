@@ -405,6 +405,10 @@ assetic:
 
 在 Production 模式中，啟用 JS 以及 CSS 壓縮合併功能
 
+如果 node 以及 uglifycss, uglifyjs 不是安裝在預設的 /usr/bin/ 底下，
+記得修改 assetic -> node: 以及 各自的 assetic -> filters -> * -> bin: 的設定。
+
+
 安裝 Node.js
 
 ```
