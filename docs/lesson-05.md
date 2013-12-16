@@ -374,12 +374,14 @@ assetic:
     use_controller: false
     #bundles:        [ ]
     #java: /usr/bin/java
+    node:                "/usr/bin/node"
     filters:
         cssrewrite: ~
         stylus:
-            apply_to:   "\.stylus$"
+            apply_to:     "\.stylus$"
         coffee:
-            apply_to:   "\.coffee$"
+            bin:           "/usr/bin/coffee"
+            apply_to:     "\.coffee$"
         #closure:
         #    jar: %kernel.root_dir%/Resources/java/compiler.jar
         #yui_css:
@@ -394,6 +396,7 @@ app/config_prod.yml
 assetic:
     filters:
         uglifycss:
+            bin:         /usr/bin/uglifycss
             apply_to:   "\.css$"
         uglifyjs2:
             bin:         /usr/bin/uglifyjs2
