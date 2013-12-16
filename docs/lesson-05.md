@@ -355,12 +355,6 @@ npm -g install stylus
 npm -g install coffee-script
 ```
 
-安裝 stylus
-
-```
-npm -g install stylus
-```
-
 [下載 Bootstrap][0]
 
 將 css, js, font 解開後放到 src/Workshop/Bundle/FrontendBundle/Resources/public
