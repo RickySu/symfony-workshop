@@ -24,8 +24,10 @@ monolog:
 assetic:
     filters:
         uglifycss:
+            #uglifycss 的執行路徑
             bin:         /usr/bin/uglifycss
             apply_to:   "\.css$"
         uglifyjs2:
+            #uglifyjs 的執行路徑
             bin:         /usr/bin/uglifyjs2
             apply_to:   "\.js$"

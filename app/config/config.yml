@@ -38,12 +38,17 @@ assetic:
     use_controller: false
     #bundles:        [ ]
     #java: /usr/bin/java
+
+    #NodeJS 的路徑
     node:                "/usr/bin/node"
+
     filters:
         cssrewrite: ~
         stylus:
+            #由於 styleus filter 沒有指定 bin，因此只要指定 node 路徑他就會自己去尋找
             apply_to:     "\.stylus$"
         coffee:
+            #coffeescript 的執行路徑
             bin:           "/usr/bin/coffee"
             apply_to:     "\.coffee$"
         #closure:
