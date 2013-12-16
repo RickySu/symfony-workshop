@@ -63,6 +63,7 @@ class PostController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
+            $entity->upload();
             $em->flush();
 
             return $this->redirect($this->generateUrl('post_show', array('id' => $entity->getId())));

@@ -222,6 +222,85 @@ src/Workshop/Bundle/BackendBundle/Resources/views/Post/show.html.twig
 {% endblock %}
 ```
 
+更新 Controller
+
+src/Workshop/Bundle/BackendBundle/Controller/PostController.php
+
+```php
+<?php
+
+/**
+ * Post controller.
+ *
+ * @Route("/post")
+ */
+class PostController extends Controller
+{
+    /**
+     * Creates a new Post entity.
+     *
+     * @Route("/", name="post_create")
+     * @Method("POST")
+     * @Template("WorkshopBackendBundle:Post:new.html.twig")
+     */
+    public function createAction(Request $request)
+    {
+        $entity = new Post();
+        $form = $this->createCreateForm($entity);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $entity->upload();    //補上 upload
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('post_show', array('id' => $entity->getId())));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Edits an existing Post entity.
+     *
+     * @Route("/{id}", name="post_update")
+     * @Method("PUT")
+     * @Template("WorkshopBackendBundle:Post:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('WorkshopBackendBundle:Post')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Post entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isValid()) {
+            $entity->upload();    //補上 upload
+            $em->flush();
+            return $this->redirect($this->generateUrl('post_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+}
+```
+
 更新前台文章列表
 
 src/Workshop/Bundle/FrontendBundle/Resources/views/Post/_list.html.twig
