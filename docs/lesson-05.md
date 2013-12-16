@@ -381,7 +381,7 @@ assetic:
             apply_to:     "\.stylus$"
         coffee:
             bin:           "/usr/bin/coffee"
-            apply_to:     "\.coffee$"
+            apply_to:      "\.coffee$"
         #closure:
         #    jar: %kernel.root_dir%/Resources/java/compiler.jar
         #yui_css:
