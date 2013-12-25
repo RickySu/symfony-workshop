@@ -285,7 +285,6 @@ class DefaultControllerTest extends WebTestCase
 }
 ```
 
-
 6) Funtional Test With Redirect
 -------------------------------
 
@@ -332,3 +331,156 @@ class DefaultControllerTest extends AbstractControllerTest
 phpunit -c app src/Workshop/Bundle/BackendBundle/Tests/Controller/DefaultControllerTest
 ```
 
+由於後台我們的 security 的限制，沒有登入的 User 都會被導向登入頁面。
+
+因此我們寫一個測試看看是否真的被導向登入頁面了。
+
+7) Funtional Test With Session
+-------------------------------
+
+可是我們要怎麼存取 Session? 例如模擬一個登入的狀態
+
+src/Workshop/Bundle/BackendBundle/Tests/Controller/PostControllerTest.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\BackendBundle\Tests\Controller;
+
+use FOS\UserBundle\Model\UserManager;
+use FOS\UserBundle\Security\LoginManager;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Bundle\FrameworkBundle\Client;
+
+class PostControllerTest extends AbstractControllerTest
+{
+
+    public function testIndex()
+    {
+        $this->requireLogin('/admin/post/');
+    }
+
+    protected function requestLogin(Client $client)
+    {
+        $container = $client->getContainer();
+        $session = $container->get('session');
+        $userManager = $container->get('fos_user.user_manager');
+        /* @var $userManager UserManager */
+
+        $loginManager = $container->get('fos_user.security.login_manager');
+        /* @var $loginManager LoginManager */
+
+        $user = $userManager->findUserByUsername('ricky');
+        $firewallName = $container->getParameter('fos_user.firewall_name');
+        $loginManager->loginUser($firewallName, $user);
+        $container->get('session')->set("_security_$firewallName", serialize($container->get('security.context')->getToken()));
+        $session->save();
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $client->getCookieJar()->set($cookie);
+    }
+
+    public function testIndexWithLogin()
+    {
+        $client = static::createClient();
+        $this->requestLogin($client);
+        $crawler = $client->request('GET', '/admin/post/');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Post list")')->count());
+    }
+
+}
+```
+
+8) Testing Form
+---------------
+
+假如我們要測試某個 Form 以及 Validator?
+
+src/Workshop/Bundle/FrontendBundle/Tests/Form/CommentTypeTest.php
+
+```php
+<?php
+namespace Workshop\Bundle\FrontendBundle\Test\Form;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Workshop\Bundle\BackendBundle\Entity;
+use Workshop\Bundle\FrontendBundle\Form;
+
+class CommentTypeTest extends WebTestCase
+{
+
+    protected $container;
+    protected $client;
+
+    protected function setup()
+    {
+        $this->client = static::createClient();
+        $this->container = $this->client->getContainer();
+    }
+
+    /**
+     * Creates and returns a Form instance from the type of the form.
+     *
+     * @param string|FormTypeInterface $type    The built type of the form
+     * @param mixed                    $data    The initial data for the form
+     * @param array                    $options Options for the form
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    public function createForm($type, $data = null, array $options = array())
+    {
+        return $this->container->get('form.factory')->create($type, $data, $options);
+    }
+
+    /**
+     * @dataProvider getTestFormData
+     */
+    public function testForm($data)
+    {
+        $commentEntity = new Entity\Comment();
+        $formType = new Form\CommentType();
+        $form = $this->createForm($formType, $commentEntity, array('csrf_protection' => false));
+        $form->submit($data['comment']);
+        $this->assertTrue($form->isSynchronized());
+        $this->assertEquals($data['equals'] ,$form->isValid());
+        $this->assertEquals($commentEntity, $form->getData());
+    }
+
+    public function getTestFormData()
+    {
+        return array(
+            array(
+                'data' => array(
+                    'equals' => false,
+                    'comment' => array(
+                        'content' => 'test',
+                    ),
+                ),
+            ),
+            array(
+                'data' => array(
+                    'equals' => false,
+                    'comment' => array(
+                        'name' => '',
+                        'content' => 'test',
+                    ),
+                ),
+            ),
+            array(
+                'data' => array(
+                    'equals' => true,
+                    'comment' => array(
+                        'name' => 'ricky',
+                        'content' => 'test',
+                    ),
+                ),
+            ),
+        );
+    }
+}
+```
+
+這邊我們使用到了 @dataProvider 這個 annotation，這時候這時候 PHPUnit，會去呼叫 getTestFormData 這個 Method，
+並且將回傳的 Array 帶入變成 $data 這個參數。
+
+要注意的一點，由於 Symfony 的 Form 預設是會帶入 csrf token，因此這邊要記得把 csrf 關掉不然會驗證失敗。
