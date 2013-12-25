@@ -243,3 +243,92 @@ OK (7 tests, 8 assertions)
 ```
 
 如果沒有意外，那應該會看到OK的字樣，那如果實作有錯，那就會得到 FAILURES 的訊息。
+
+5) Funtional Test
+-----------------
+
+什麼是 Functional Test?
+
+所 Functional Test 指的是一整個完整 Request 的結果測試。
+
+在 Symfony 中可以透過 Functional Test，實際發出一個 GET/POST，並取得 Response。
+
+透過分析 status code，或是 html 內容來測試某個 Controller。
+
+例如我們要測試首頁是否正常
+
+src/Workshop/Bundle/FrontendBundle/Tests/Controller/DefaultControllerTest.php
+
+```php
+<?php
+
+namespace Workshop\Bundle\FrontendBundle\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class DefaultControllerTest extends WebTestCase
+{
+    public function testIndex()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertTrue($crawler->filter('html:contains("This is Homepage")')->count() > 0);
+
+        if ($profile = $client->getProfile()) {
+            $this->assertGreaterThanOrEqual(2, $profile->getCollector('db')->getQueryCount());
+        }
+    }
+}
+```
+
+
+6) Funtional Test With Redirect
+-------------------------------
+
+src/Workshop/Bundle/BackendBundle/Tests/Controller/AbstractControllerTest.php
+
+```php
+<?php
+namespace Workshop\Bundle\BackendBundle\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+abstract class AbstractControllerTest extends WebTestCase
+{
+    protected function requireLogin($url, $method='GET')
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request($method, $url);
+
+        $container = $client->getContainer();
+        $redirect = $container->get('router')->generate('@BackendLogin', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->assertTrue($client->getResponse()->isRedirect($redirect));
+    }
+}
+```
+
+src/Workshop/Bundle/BackendBundle/Tests/Controller/DefaultControllerTest.php
+
+```php
+<?php
+namespace Workshop\Bundle\BackendBundle\Tests\Controller;
+
+class DefaultControllerTest extends AbstractControllerTest
+{
+    public function testIndex()
+    {
+        $this->requireLogin('/admin/');
+    }
+}
+```
+
+```
+phpunit -c app src/Workshop/Bundle/BackendBundle/Tests/Controller/DefaultControllerTest
+```
+
