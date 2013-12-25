@@ -1,7 +1,7 @@
 <?php
 namespace Workshop\Bundle\BackendBundle\Tests\Controller;
 
-class DefaultControllerTest extends AbstractControllerTest
+class PostControllerTest extends AbstractControllerTest
 {
     public function testIndex()
     {
