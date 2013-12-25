@@ -484,3 +484,7 @@ class CommentTypeTest extends WebTestCase
 並且將回傳的 Array 帶入變成 $data 這個參數。
 
 要注意的一點，由於 Symfony 的 Form 預設是會帶入 csrf token，因此這邊要記得把 csrf 關掉不然會驗證失敗。
+
+更多關於 Functional Test 可以參考官方的文件 [http://symfony.com/doc/current/book/testing.html#functional-tests][0]
+
+[0]:    http://symfony.com/doc/current/book/testing.html#functional-tests
